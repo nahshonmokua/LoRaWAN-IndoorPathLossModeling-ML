@@ -1,0 +1,12 @@
+=====CONFIGURATION FOR ANACONDA IN THIS ORDER=====
+
+conda create -n ml_models_env python=3.11.7
+conda activate ml_models_env
+
+
+conda install -c conda-forge numpy pandas scikit-learn matplotlib seaborn jupyter ipykernel xgboost lightgbm
+
+pip install tensorflow keras
+
+
+python -m ipykernel install --user --name=ml_models_env --display-name "Python (ml_models_env)"
