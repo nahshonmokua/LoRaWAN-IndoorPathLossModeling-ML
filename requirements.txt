@@ -1,12 +1,15 @@
-=====CONFIGURATION FOR ANACONDA IN THIS ORDER=====
+=====CONFIGURATION FOR ANACONDA DISTRIBUTION IN THIS ORDER=====
 
+
+# Create a new Conda environment with Python 3.11.7, for example
 conda create -n ml_models_env python=3.11.7
 conda activate ml_models_env
 
+# Install required packages using Conda
+conda install -c conda-forge numpy pandas scikit-learn matplotlib seaborn jupyter ipykernel xgboost lightgbm python-dotenv influxdb -c plotly plotly -c anaconda openpyxl
 
-conda install -c conda-forge numpy pandas scikit-learn matplotlib seaborn jupyter ipykernel xgboost lightgbm
-
+# Install TensorFlow and Keras using pip (must be installed after Conda packages)
 pip install tensorflow keras
 
-
+# Configure the environment for use in various IDEs
 python -m ipykernel install --user --name=ml_models_env --display-name "Python (ml_models_env)"
