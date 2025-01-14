@@ -5,8 +5,11 @@
 conda create -n ml_models_env python=3.11.7
 conda activate ml_models_env
 
-# Install required packages using Conda
-conda install -c conda-forge numpy pandas scikit-learn matplotlib seaborn jupyter ipykernel xgboost lightgbm python-dotenv influxdb -c plotly plotly -c anaconda openpyxl
+# Install required packages using Conda in this order
+
+conda install -c conda-forge numpy pandas scikit-learn matplotlib seaborn jupyter ipykernel xgboost lightgbm python-dotenv influxdb
+conda install -c plotly plotly
+conda install -c anaconda openpyxl
 
 # Install TensorFlow and Keras using pip (must be installed after Conda packages)
 pip install tensorflow keras
