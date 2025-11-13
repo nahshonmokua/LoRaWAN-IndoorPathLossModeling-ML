@@ -17,3 +17,52 @@ pip install tensorflow keras
 
 # Configure the environment for use in various IDEs
 python -m ipykernel install --user --name=ml_models_env --display-name "Python (ml_models_env)"
+
+
+
+
+=====CONFIGURATION FOR UBUNTU PYTHON VENV DISTRIBUTION IN THIS ORDER=====
+
+# Create a new virtual environment with system Python (for example Python 3.12)
+python3 -m venv ~/envs/ml001
+source ~/envs/ml001/bin/activate
+
+# Upgrade packaging tools inside the environment
+python -m pip install --upgrade pip setuptools wheel
+
+# Create a requirements file with all needed packages
+cat > requirements-ml001.txt << 'EOF'
+numpy==1.26.4
+pandas==2.2.2
+matplotlib==3.8.4
+seaborn==0.13.2
+scikit-learn==1.4.2
+scipy==1.13.1
+plotly==5.24.1
+openpyxl==3.1.5
+nbformat==5.10.4
+
+xgboost==2.1.1
+lightgbm==4.5.0
+python-dotenv==1.0.1
+
+# For InfluxDB 1.x servers
+influxdb==5.3.1
+# If you use InfluxDB 2.x instead, comment the line above and use:
+# influxdb-client==1.48.0
+
+# Deep learning (CPU only)
+tensorflow-cpu==2.17.0
+keras==3.5.0
+
+# Jupyter ecosystem and kernel
+ipykernel==6.29.5
+jupyter==1.1.1
+jupyterlab==4.2.5
+EOF
+
+# Install all required packages from the requirements file
+pip install -r requirements-ml001.txt
+
+# Configure the environment for use in Jupyter and various IDEs (VS Code etc.)
+python -m ipykernel install --user --name=ml001 --display-name "Python (ml001)"
