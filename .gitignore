@@ -151,7 +151,7 @@ cython_debug/
 # Commonly Reused with confidential Info
 
 #FILES (ALSO PERSONAL NOTES)
-Untitled.ipynb
+
 To Do List and Research Directions.txt
 ML Stages0.png
 ML Stages1.jpg
@@ -161,6 +161,10 @@ Exploratory Transmission Analysis.ipynb
 
 # Data files
 **/Results/
+Plots+Results 
+Residuals
+Data_Files
+
 
 # ML artifacts
 Models/
