@@ -160,7 +160,8 @@ z_Exploratory Transmission Analysis.ipynb
 
 # Data files
 **/Results/
-CV_Results 
+CV_Results
+FM_Results 
 Figures
 Residuals
 Data_Files
