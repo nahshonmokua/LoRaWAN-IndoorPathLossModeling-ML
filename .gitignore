@@ -167,6 +167,15 @@ Residuals
 Data_Files
 
 
+
+KNN 
+RNN 
+SVR 
+XGBoost 
+ANN 
+LightGBM
+RFs
+
 # ML artifacts
 Models/
 *.pkl
