@@ -180,6 +180,7 @@ XGBoost
 ANN 
 LightGBM
 RFs
+Archive
 
 # ML artifacts
 Models/
