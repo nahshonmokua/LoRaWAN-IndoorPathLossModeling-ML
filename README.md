@@ -1,4 +1,4 @@
-# Indoor LoRaWAN path-loss modelling
+# Indoor LoRaWAN path loss modeling
 
 **Temporally separated evaluation of analytical and empirical propagation models and machine learning regressors, with residual-tail calibration of fade margins.**
 
@@ -8,7 +8,7 @@
 
 ## Aim
 
-This study compares analytical and empirical indoor propagation laws, linear models, tree ensembles, kernel methods, nearest-neighbour regression, and neural networks on a later period of LoRaWAN path-loss measurements. It then uses out-of-fold errors to estimate fade margins at specified residual-coverage targets.
+This study compares analytical and empirical indoor propagation laws, linear models, tree ensembles, kernel methods, nearest-neighbour regression, and neural networks on a later period of LoRaWAN path loss measurements. It then uses out-of-fold errors to estimate fade margins at specified residual-coverage targets.
 
 RMSE and the upper residual tail are distinct objectives. The RNN gives the lowest held-out RMSE, while the random forest has the lowest calibrated margin point estimate at a 99% residual-coverage target.
 
@@ -33,9 +33,9 @@ Two training exceptions are explicit in the notebooks: ANN and RNN retain the la
 
 ![Held-out RMSE for the evaluated models](docs/assets/held-out-rmse.png)
 
-*Held-out path-loss error on the 415,883 rows common to all models. Points are RMSE; bars are 95% circular moving-block-bootstrap intervals (1,000 replicates; block length 5,000). Intervals quantify test-sampling uncertainty with fitted models held fixed.*
+*Held-out path loss error on the 415,883 rows common to all models. Points are RMSE; bars are 95% circular moving-block-bootstrap intervals (1,000 replicates; block length 5,000). Intervals quantify test-sampling uncertainty with fitted models held fixed.*
 
-The RNN attained 4.77 dB RMSE (95% CI 4.54–5.04), compared with 4.98 dB for the ANN and 5.02 dB for both XGBoost and LightGBM. Paired bootstrap differences place the RNN ahead of the ANN by 0.205 dB (95% CI 0.162–0.247) and XGBoost by 0.242 dB (0.089–0.381); pairwise intervals among the ANN, XGBoost, and LightGBM include zero. The strongest empirical path-loss models remain near 12.5 dB RMSE.
+The RNN attained 4.77 dB RMSE (95% CI 4.54–5.04), compared with 4.98 dB for the ANN and 5.02 dB for both XGBoost and LightGBM. Paired bootstrap differences place the RNN ahead of the ANN by 0.205 dB (95% CI 0.162–0.247) and XGBoost by 0.242 dB (0.089–0.381); pairwise intervals among the ANN, XGBoost, and LightGBM include zero. The strongest empirical path loss models remain near 12.5 dB RMSE.
 
 Point error and upper-tail margin requirements rank the models differently. At a 99% residual-coverage target, the lowest calibrated point estimate is from the random forest (17.74 dB; held-out residual coverage 99.62%), followed by XGBoost (17.85 dB), LightGBM (17.93 dB), ANN (18.01 dB), and RNN (18.36 dB). At the 98% and 99% targets, calibration takes the conservative maximum of the empirical and three-component Gaussian-mixture tail estimates; the 95% target uses the empirical quantile. Empirical-quantile intervals use device-aware moving blocks; Gaussian-mixture tail intervals are parametric.
 
@@ -56,12 +56,8 @@ The reported model runs used Python 3.12. Download the current cleaned dataset a
 
 ```bash
 mkdir -p Data_Files
-curl -L \
-  https://zenodo.org/api/records/19089760/files/3.cleaned_dataset_per_device.csv/content \
-  -o Data_Files/cleaned_dataset_per_device.csv
-printf '%s  %s\n' \
-  281a4f3c630d0fce9655fad1a7df3c33 \
-  Data_Files/cleaned_dataset_per_device.csv | md5sum --check
+curl -L https://zenodo.org/api/records/19089760/files/3.cleaned_dataset_per_device.csv/content -o Data_Files/cleaned_dataset_per_device.csv
+printf '%s  %s\n' 281a4f3c630d0fce9655fad1a7df3c33 Data_Files/cleaned_dataset_per_device.csv | md5sum --check
 ```
 
 Create the main environment from [`requirements.txt`](requirements.txt):
@@ -71,8 +67,7 @@ python3.12 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python -m ipykernel install --user --name lorawan-pathloss \
-  --display-name "Python (LoRaWAN path loss)"
+python -m ipykernel install --user --name lorawan-pathloss --display-name "Python (LoRaWAN path loss)"
 jupyter lab
 ```
 
@@ -83,8 +78,7 @@ python3.12 -m venv .venv-rapids
 source .venv-rapids/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements-rapids-cu12.txt
-python -m ipykernel install --user --name lorawan-pathloss-rapids \
-  --display-name "Python (LoRaWAN path loss, RAPIDS)"
+python -m ipykernel install --user --name lorawan-pathloss-rapids --display-name "Python (LoRaWAN path loss, RAPIDS)"
 ```
 
 Select the RAPIDS kernel for `06_kNN.ipynb`; use the main kernel for the other notebooks.
