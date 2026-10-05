@@ -89,10 +89,10 @@ Run the numbered notebooks from the repository root. Their order is the dependen
 |---|---|---|
 | Split and folds | [`00_Data_Preparation.ipynb`](00_Data_Preparation.ipynb) | Chronological train/test data and expanding-window indices |
 | Baselines | [`01_Empirical_PLMs.ipynb`](01_Empirical_PLMs.ipynb), [`02_MLR.ipynb`](02_MLR.ipynb) | Empirical and linear-model fits and residuals |
-| Nonlinear models | `03_RF.ipynb` through `09_RNN.ipynb` | Selected models and out-of-fold/test residuals |
-| Residual tails | [`10_SHADOW FADING ANALYSIS.ipynb`](10_SHADOW%20FADING%20ANALYSIS.ipynb) | Distribution and Gaussian-mixture diagnostics |
-| Margin calibration | [`11_FADE MARGIN ANALYSIS.ipynb`](11_FADE%20MARGIN%20ANALYSIS.ipynb) | Calibrated fade margins and held-out residual coverage |
-| Synthesis | [`12_General_Comparisons.ipynb`](12_General_Comparisons.ipynb), [`13_Bootstrap_Model_Comparison.ipynb`](13_Bootstrap_Model_Comparison.ipynb) | Cross-model figures and paired uncertainty estimates |
+| Nonlinear models | `03_RF.ipynb` through `07_ANN.ipynb` | Selected models and out-of-fold/test residuals |
+| Residual tails | [`08_SHADOW FADING ANALYSIS.ipynb`](08_SHADOW%20FADING%20ANALYSIS.ipynb) | Distribution and Gaussian-mixture diagnostics |
+| Margin calibration | [`09_FADE MARGIN ANALYSIS.ipynb`](09_FADE%20MARGIN%20ANALYSIS.ipynb) | Calibrated fade margins and held-out residual coverage |
+| Synthesis | [`10_General_Comparisons.ipynb`](10_General_Comparisons.ipynb), [`11_Bootstrap_Model_Comparison.ipynb`](11_Bootstrap_Model_Comparison.ipynb) | Cross-model figures and paired uncertainty estimates |
 
 The full benchmark is compute-intensive. XGBoost is configured for CUDA. ANN/RNN screening used a GPU, whereas multi-seed selection and final ensembles were run on deterministic CPU. The recorded SVR search alone required approximately 4.8 days with 12 parallel workers. Executed result cells document the reported runs, but generated search tables, data, models, residuals, and bulk analysis figures are intentionally excluded from version control and must be regenerated for a clean reproduction; the curated figure above is retained. Several notebook figures request Times New Roman and fall back to an installed font when it is unavailable.
 
