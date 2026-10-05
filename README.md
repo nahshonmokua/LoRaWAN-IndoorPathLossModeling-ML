@@ -102,7 +102,15 @@ Residual analyses test normality and tail shape, compare Gaussian-mixture repres
 
 ## Reproduce the analysis
 
-The reported model runs used Python 3.12. Notebook `00` reads the cleaned dataset from `../all_data_files/cleaned_dataset_per_device.csv`, a path relative to the repository root. The file has 2,660,274 rows at spreading factors 7 to 12, with RSSI and SNR taken from the project gateway and pressure in hPa, and is written by notebooks 02 to 04 of the [data pipeline repository](https://github.com/nahshonmokua/LoRaWAN-Indoor-Path-Loss-Modelling-with-MultiWall-Environment-Factors).
+The reported model runs used Python 3.12. Download file 3 of the [Zenodo dataset, version 3](https://doi.org/10.5281/zenodo.23127026) and place it at the path expected by notebook `00`. The checksum is that of the file behind every result here:
+
+```bash
+mkdir -p Data_Files
+curl -L https://zenodo.org/api/records/23127026/files/3.cleaned_dataset_per_device.csv/content -o Data_Files/cleaned_dataset_per_device.csv
+printf '%s  %s\n' 2d69176011fb32e0ef5d664bf9285e98 Data_Files/cleaned_dataset_per_device.csv | md5sum --check
+```
+
+The file has 2,660,274 rows at spreading factors 7 to 12, with RSSI and SNR taken from the project gateway and pressure in hPa. The [data pipeline repository](https://github.com/nahshonmokua/LoRaWAN-Indoor-Path-Loss-Modelling-with-MultiWall-Environment-Factors) regenerates it from the raw export with notebooks 02 to 04.
 
 Create the main environment from [`requirements.txt`](requirements.txt):
 
@@ -163,7 +171,7 @@ The other notebooks take minutes. Executed result cells document the reported ru
 
 ## Data and citation
 
-The current dataset version is archived on [Zenodo](https://doi.org/10.5281/zenodo.19089760) under CC BY 4.0. The concept DOI [`10.5281/zenodo.15349730`](https://doi.org/10.5281/zenodo.15349730) resolves to the latest release.
+The dataset is archived on [Zenodo](https://doi.org/10.5281/zenodo.23127026) under CC BY 4.0. These notebooks use version 3 (October 2026), which corrects the RSSI and SNR attribution and the pressure unit of versions 1 and 2, as described in the version history of the record. The concept DOI [`10.5281/zenodo.15349730`](https://doi.org/10.5281/zenodo.15349730) resolves to the latest release.
 
 If you use the measurements, cite:
 
