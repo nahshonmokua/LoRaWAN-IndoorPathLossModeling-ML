@@ -10,7 +10,7 @@
 
 This study compares analytical and empirical indoor propagation laws, linear models, tree ensembles, nearest-neighbour regression and neural networks on a later period of LoRaWAN path loss measurements. It then uses out-of-fold errors to estimate fade margins at specified residual-coverage targets, and asks how those margins depend on what the predictor knows: geometry and environmental sensors only, or also the link's own earlier packets.
 
-RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 18.9 to 19.3 dB for every model, although held-out RMSE ranges from 4.8 to 6.4 dB. With the link's earlier packets it falls to 8.8 to 11.8 dB when calibrated on the whole year, which includes SF11 and SF12 rows that the hold-out lacks. A margin that also conditions on the spreading factor and the state of the link needs 4 to 5 dB on the hold-out. Notebooks 17 to 20 test the margins as quantile forecasts, compare the history models with the estimators of adaptive data rate schemes, measure what each group of inputs adds, and repeat the ladder on a public dataset.
+RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 18.9 to 19.3 dB for every model, although held-out RMSE ranges from 4.8 to 6.4 dB. With the link's earlier packets it falls to 8.8 to 11.8 dB when calibrated on the whole year, which includes SF11 and SF12 rows that the hold-out lacks. A margin that also conditions on the spreading factor and the state of the link needs 4 to 5 dB on the hold-out. Notebooks 17 to 21 test the margins as quantile forecasts, compare the history models with the estimators of adaptive data rate schemes, measure what each group of inputs adds, repeat the ladder on a public dataset, and report the mean absolute error and the correlation within each link.
 
 ## Experimental design
 
@@ -52,6 +52,30 @@ Early stopping uses the latest part of each training set in time order: the late
 XGBoost leads at 4.83 dB (95% CI 4.59 to 5.07). The paired block bootstrap resolves it ahead of the random forest, kNN, the ANN and the linear model, by 0.10 to 0.42 dB, but not ahead of LightGBM; kNN, the ANN and the random forest are tied with one another. Every data-driven model beats the calibrated COST 231 multi-wall model by at least 1.1 dB and the fixed-parameter propagation models by at least 1.9 dB.
 
 At a 99% residual-coverage target every static model needs 18.9 to 19.3 dB, at 98% 16.1 to 16.7 dB and at 95% 10.7 to 11.7 dB; the largest saving against the linear model at 99% is 0.29 dB. At the 98% and 99% targets calibration takes the conservative maximum of the empirical and three-component Gaussian-mixture tail estimates; the 95% target uses the empirical quantile. Held-out coverage at the 99% margin is 99.7 to 99.8%, and a fixed 10 dB margin reaches 96.0 to 98.2%. Empirical-quantile intervals use device-aware moving blocks; Gaussian-mixture tail intervals are parametric.
+
+### Mean absolute error and correlation
+
+Notebook 21 adds the mean absolute error and the Pearson correlation between measurement and prediction, on the 531,983 hold-out packets that every model predicts, with 95% intervals from resampling days. The correlation is given twice. Pooled over all links it is dominated by the 60 dB between the links; within each link, after removing the mean of the link from the measurement and from the prediction, it measures whether the model follows the variation of a link in time.
+
+| Model | MAE, dB | RMSE, dB | Bias, dB | R² | Pearson r, all links | Pearson r, within link |
+|---|---|---|---|---|---|---|
+| COST 231 multi-wall (calibrated) | 5.09 [4.85, 5.34] | 6.38 | +1.49 | 0.845 | 0.924 [0.918, 0.931] | -0.11 [-0.12, -0.09] |
+| Linear regression, static inputs | 4.15 [3.98, 4.33] | 5.25 | +1.46 | 0.895 | 0.951 [0.945, 0.956] | -0.10 [-0.18, -0.04] |
+| Random forest, static inputs | 3.92 [3.75, 4.11] | 4.93 | +1.30 | 0.907 | 0.957 [0.951, 0.962] | -0.05 [-0.11, +0.00] |
+| XGBoost, static inputs | 3.75 [3.56, 3.96] | 4.83 | +0.82 | 0.911 | 0.958 [0.952, 0.964] | -0.00 [-0.06, +0.05] |
+| LightGBM, static inputs | 3.87 [3.70, 4.04] | 4.87 | +1.45 | 0.910 | 0.958 [0.953, 0.963] | +0.13 [+0.11, +0.14] |
+| k-nearest neighbours, static inputs | 3.89 [3.69, 4.10] | 5.01 | +0.59 | 0.904 | 0.960 [0.954, 0.965] | +0.11 [+0.06, +0.17] |
+| ANN, static inputs | 3.89 [3.63, 4.19] | 5.08 | -0.24 | 0.901 | 0.956 [0.948, 0.963] | -0.12 [-0.20, -0.04] |
+| Per-link mean (no model) | 4.01 [3.84, 4.19] | 5.04 | +1.47 | 0.903 | 0.957 [0.951, 0.961] | constant per link |
+| Previous-hour mean (no model) | 2.05 [2.01, 2.08] | 2.71 | +0.00 | 0.972 | 0.986 [0.985, 0.987] | +0.78 [+0.75, +0.81] |
+| LightGBM, link history (rung 1) | 1.75 [1.73, 1.78] | 2.34 | +0.01 | 0.979 | 0.990 [0.989, 0.990] | +0.84 [+0.82, +0.86] |
+| LightGBM, rung H4 | 1.43 [1.41, 1.45] | 1.95 | +0.00 | 0.986 | 0.993 [0.992, 0.993] | +0.89 [+0.88, +0.91] |
+| LightGBM, rung H7 | 1.32 [1.30, 1.34] | 1.82 | +0.02 | 0.987 | 0.994 [0.993, 0.994] | +0.91 [+0.89, +0.92] |
+| GRU, rung H4 | 1.45 [1.43, 1.47] | 1.97 | +0.07 | 0.985 | 0.993 [0.992, 0.993] | +0.89 [+0.88, +0.90] |
+
+- **The pooled correlation separates nothing.** One constant per link scores 0.957 and every static machine-learning model between 0.951 and 0.960, so a model that knows only which link it is already sits above 0.95.
+- **No static model follows a link in time.** The within-link correlation of the static models lies between -0.12 and +0.13, the history models reach 0.81 to 0.91, and the previous-hour mean alone 0.78.
+- **The MAE ranks the static models like the RMSE does.** The machine-learning models lie between 3.75 and 4.15 dB, the per-link mean at 4.02 dB, and the history models between 1.3 and 1.9 dB. The static models are off by -0.2 to +1.5 dB on the summer hold-out and the history models by at most 0.17 dB.
 
 ### Link history
 
@@ -238,6 +262,7 @@ Run the numbered notebooks from the repository root. Their order is the dependen
 | Estimator baselines | [`18_ADR_Estimators.ipynb`](18_ADR_Estimators.ipynb) | The estimators of adaptive data rate schemes against the history models |
 | Input groups | [`19_Feature_Groups.ipynb`](19_Feature_Groups.ipynb) | Ablation of the static inputs and the steps of the history rungs, with intervals |
 | Public dataset | [`20_Medellin_Ladder.ipynb`](20_Medellin_Ladder.ipynb) | The ladder on the public urban measurements |
+| Error metrics | [`21_Error_Metrics.ipynb`](21_Error_Metrics.ipynb) | MAE, bias and Pearson correlation, pooled and within link, for every model |
 
 The full benchmark is compute-intensive. Approximate wall-clock times on a workstation with 32 CPU cores, 60 GB of RAM and one NVIDIA RTX 5090:
 
@@ -258,6 +283,7 @@ The full benchmark is compute-intensive. Approximate wall-clock times on a works
 | `18_ADR_Estimators` | 1 min |
 | `19_Feature_Groups` | 12 min |
 | `20_Medellin_Ladder` | 5 min |
+| `21_Error_Metrics` | 30 s |
 
 The other notebooks take minutes. Executed result cells document the reported runs, but generated search tables, data, models, residuals, and bulk analysis figures are intentionally excluded from version control and must be regenerated for a clean reproduction; the curated figures above are retained. Several notebook figures request Times New Roman and fall back to an installed font when it is unavailable.
 
