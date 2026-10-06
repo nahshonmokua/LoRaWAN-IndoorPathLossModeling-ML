@@ -10,7 +10,7 @@
 
 This study compares analytical and empirical indoor propagation laws, linear models, tree ensembles, nearest-neighbour regression and neural networks on a later period of LoRaWAN path loss measurements. It then uses out-of-fold errors to estimate fade margins at specified residual-coverage targets, and asks how those margins depend on what the predictor knows: geometry and environmental sensors only, or also the link's own earlier packets.
 
-RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 18.9 to 19.3 dB for every model, although held-out RMSE ranges from 4.8 to 6.4 dB. With the link's earlier packets it falls to 8.8 to 11.8 dB, and to 4 to 5 dB when the margin follows the state of the link.
+RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 18.9 to 19.3 dB for every model, although held-out RMSE ranges from 4.8 to 6.4 dB. With the link's earlier packets it falls to 8.8 to 11.8 dB when calibrated on the whole year, which includes SF11 and SF12 rows that the hold-out lacks. A margin that also conditions on the spreading factor and the state of the link needs 4 to 5 dB on the hold-out.
 
 ## Experimental design
 
@@ -87,7 +87,7 @@ Quantile models predict the margin itself from the same inputs (LightGBM and XGB
 | 95% | 5.3 dB (96.7%) | 3.0 dB (95.3%) | 2.9 dB (95.3%) | not fitted |
 | 99% | 10.6 dB (99.8%) | 4.7 dB (99.3%) | 4.7 dB (99.3%) | 4.9 dB (99.2%) |
 
-The 99% margin of the LightGBM quantile model is 5.6 dB in working hours and 4.3 dB otherwise. At one uplink every 10 minutes LightGBM on rung 2 reaches 2.3 dB RMSE and a 99% margin of 10.4 dB, against 2.7 dB and 11.9 dB for the mean of the previous 20 packets; at one uplink per hour it reaches 2.6 dB and 11.8 dB, against 3.2 dB and 13.1 dB.
+The fixed margin of the first column is calibrated on all validation rows, including SF11 and SF12, and reaches 99.8% on the SF7 to SF10 hold-out, so it is conservative there. The quantile models condition on the spreading factor and are not conservative in that way, so the columns compare different calibration regimes and the table overstates what following the state adds beyond knowing the spreading factor. The 99% margin of the LightGBM quantile model is 5.6 dB in working hours and 4.3 dB otherwise. At one uplink every 10 minutes LightGBM on rung 2 reaches 2.3 dB RMSE and a 99% margin of 10.4 dB, against 2.7 dB and 11.9 dB for the mean of the previous 20 packets; at one uplink per hour it reaches 2.6 dB and 11.8 dB, against 3.2 dB and 13.1 dB.
 
 ## Model scope
 
