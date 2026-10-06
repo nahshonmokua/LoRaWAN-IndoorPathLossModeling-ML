@@ -10,7 +10,7 @@
 
 This study compares analytical and empirical indoor propagation laws, linear models, tree ensembles, nearest-neighbour regression and neural networks on a later period of LoRaWAN path loss measurements. It then uses out-of-fold errors to estimate fade margins at specified residual-coverage targets, and asks how those margins depend on what the predictor knows: geometry and environmental sensors only, or also the link's own earlier packets.
 
-RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 18.9 to 19.3 dB for every model, although held-out RMSE ranges from 4.8 to 6.4 dB. With the link's earlier packets it falls to 9 to 12 dB, and to 4 to 5 dB when the margin follows the state of the link.
+RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 18.9 to 19.3 dB for every model, although held-out RMSE ranges from 4.8 to 6.4 dB. With the link's earlier packets it falls to 8.8 to 11.8 dB, and to 4 to 5 dB when the margin follows the state of the link.
 
 ## Experimental design
 
@@ -69,13 +69,13 @@ From here the response is the deviation of path loss from the link's previous-ho
 | LightGBM | 4.87 / 19.2 | 2.34 / 10.8 | 1.95 / 10.0 | 1.82 / 10.2 | 1.82 / 10.1 |
 | k-nearest neighbours | 5.01 / 18.9 | 2.46 / 11.2 | 2.16 / 10.7 | 2.16 / 11.0 | 2.19 / 11.1 |
 | ANN (MLP) | 5.09 / 19.3 | 2.50 / 11.1 | 1.99 / 10.1 | 1.92 / 10.4 | 1.92 / 10.4 |
-| GRU | not defined | 2.55 / 9.2 | 2.27 / 9.0 | 2.22 / 9.3 | 2.23 / 9.2 |
+| GRU | not defined | 2.53 / 9.2 | 1.97 / 8.8 | 1.90 / 9.1 | 1.92 / 9.0 |
 
-*Hold-out RMSE / 99% fade margin, both in dB. The first column is the static model of the table above. The GRU reads the last 30 packets of the link and is defined only where a history exists. Without a fitted model: link mean 5.04 dB / 19.0 dB; previous-hour mean 2.71 dB / 12.0 dB; previous packet 3.04 dB / 12.5 dB.*
+*Hold-out RMSE / 99% fade margin, both in dB. The first column is the static model of the table above. The GRU reads the last 30 packets of the link, with the windows that reach further back as static inputs, and is defined only where a history exists. Without a fitted model: link mean 5.04 dB / 19.0 dB; previous-hour mean 2.71 dB / 12.0 dB; previous packet 3.04 dB / 12.5 dB.*
 
-Adding the link's earlier packets halves RMSE and brings the 99% margin from about 19 dB to between 9 and 12 dB in every family. The later rungs lower RMSE further, to 1.8 dB for the boosted trees, but leave the margin near 10 dB: channel, clock, spreading factor, earlier SNR, sensors and geometry do not reduce the deep-fade tail. The boosted trees, the random forest and the ANN end within 0.1 dB of one another at the last rung; kNN, the GRU and the linear model are 0.4 to 0.6 dB behind. The GRU, which reads the raw sequence, does not improve on the engineered windows.
+Adding the link's earlier packets halves RMSE and brings the 99% margin from about 19 dB to between 8.8 and 11.8 dB in every family. The later rungs lower RMSE further, to 1.8 dB for the boosted trees, but change the margin by less than 1 dB: channel, clock, spreading factor, earlier SNR, sensors and geometry do not reduce the deep-fade tail. At the last rung the boosted trees, the random forest, the ANN and the GRU end between 1.82 and 1.92 dB; kNN and the linear model are 0.4 to 0.6 dB behind. The GRU reads the raw sequence of the last 30 packets, with spreading factor and channel as indicators; it matches the engineered windows and does not improve on them.
 
-Fitted on five links and tested on the sixth (rung 2), the tree ensembles reach 2.0 dB on average, 2.2 dB on the worst link and within 0.1 dB of the same models with the link in training; the linear model, kNN, the ANN and the GRU reach 2.1 to 2.4 dB. Coverage at the calibrated 99% margin is 99.7% on the unseen link (99.3% for the GRU).
+Fitted on five links and tested on the sixth (rung 2), the tree ensembles and the GRU reach 2.0 dB on average and 2.2 dB on the worst link, within 0.1 dB of the same models with the link in training; the ANN reaches 2.1 dB, kNN 2.3 dB and the linear model 2.4 dB. Coverage at the calibrated 99% margin is 99.7% on the unseen link (99.6% for the GRU).
 
 ### Margins that follow the link
 
