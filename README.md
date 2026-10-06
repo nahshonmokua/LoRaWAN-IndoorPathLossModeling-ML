@@ -53,30 +53,6 @@ XGBoost leads at 4.83 dB (95% CI 4.59 to 5.07). The paired block bootstrap resol
 
 At a 99% residual-coverage target every static model needs 18.9 to 19.3 dB, at 98% 16.1 to 16.7 dB and at 95% 10.7 to 11.7 dB; the largest saving against the linear model at 99% is 0.29 dB. At the 98% and 99% targets calibration takes the conservative maximum of the empirical and three-component Gaussian-mixture tail estimates; the 95% target uses the empirical quantile. Held-out coverage at the 99% margin is 99.7 to 99.8%, and a fixed 10 dB margin reaches 96.0 to 98.2%. Empirical-quantile intervals use device-aware moving blocks; Gaussian-mixture tail intervals are parametric.
 
-### Mean absolute error and correlation
-
-Notebook 21 adds the mean absolute error and the Pearson correlation between measurement and prediction, on the 531,983 hold-out packets that every model predicts, with 95% intervals from resampling days. The correlation is given twice. Pooled over all links it is dominated by the 60 dB between the links; within each link, after removing the mean of the link from the measurement and from the prediction, it measures whether the model follows the variation of a link in time.
-
-| Model | MAE, dB | RMSE, dB | Bias, dB | R² | Pearson r, all links | Pearson r, within link |
-|---|---|---|---|---|---|---|
-| COST 231 multi-wall (calibrated) | 5.09 [4.85, 5.34] | 6.38 | +1.49 | 0.845 | 0.924 [0.918, 0.931] | -0.11 [-0.12, -0.09] |
-| Linear regression, static inputs | 4.15 [3.98, 4.33] | 5.25 | +1.46 | 0.895 | 0.951 [0.945, 0.956] | -0.10 [-0.18, -0.04] |
-| Random forest, static inputs | 3.92 [3.75, 4.11] | 4.93 | +1.30 | 0.907 | 0.957 [0.951, 0.962] | -0.05 [-0.11, +0.00] |
-| XGBoost, static inputs | 3.75 [3.56, 3.96] | 4.83 | +0.82 | 0.911 | 0.958 [0.952, 0.964] | -0.00 [-0.06, +0.05] |
-| LightGBM, static inputs | 3.87 [3.70, 4.04] | 4.87 | +1.45 | 0.910 | 0.958 [0.953, 0.963] | +0.13 [+0.11, +0.14] |
-| k-nearest neighbours, static inputs | 3.89 [3.69, 4.10] | 5.01 | +0.59 | 0.904 | 0.960 [0.954, 0.965] | +0.11 [+0.06, +0.17] |
-| ANN, static inputs | 3.89 [3.63, 4.19] | 5.08 | -0.24 | 0.901 | 0.956 [0.948, 0.963] | -0.12 [-0.20, -0.04] |
-| Per-link mean (no model) | 4.01 [3.84, 4.19] | 5.04 | +1.47 | 0.903 | 0.957 [0.951, 0.961] | constant per link |
-| Previous-hour mean (no model) | 2.05 [2.01, 2.08] | 2.71 | +0.00 | 0.972 | 0.986 [0.985, 0.987] | +0.78 [+0.75, +0.81] |
-| LightGBM, link history (rung 1) | 1.75 [1.73, 1.78] | 2.34 | +0.01 | 0.979 | 0.990 [0.989, 0.990] | +0.84 [+0.82, +0.86] |
-| LightGBM, rung H4 | 1.43 [1.41, 1.45] | 1.95 | +0.00 | 0.986 | 0.993 [0.992, 0.993] | +0.89 [+0.88, +0.91] |
-| LightGBM, rung H7 | 1.32 [1.30, 1.34] | 1.82 | +0.02 | 0.987 | 0.994 [0.993, 0.994] | +0.91 [+0.89, +0.92] |
-| GRU, rung H4 | 1.45 [1.43, 1.47] | 1.97 | +0.07 | 0.985 | 0.993 [0.992, 0.993] | +0.89 [+0.88, +0.90] |
-
-- **The pooled correlation separates nothing.** One constant per link scores 0.957 and every static machine-learning model between 0.951 and 0.960, so a model that knows only which link it is already sits above 0.95.
-- **No static model follows a link in time.** The within-link correlation of the static models lies between -0.12 and +0.13, the history models reach 0.81 to 0.91, and the previous-hour mean alone 0.78.
-- **The MAE ranks the static models like the RMSE does.** The machine-learning models lie between 3.75 and 4.15 dB, the per-link mean at 4.02 dB, and the history models between 1.3 and 1.9 dB. The static models are off by -0.2 to +1.5 dB on the summer hold-out and the history models by at most 0.17 dB.
-
 ### Link history
 
 ![Hold-out RMSE and 99% fade margin by information rung and model family](docs/assets/information-by-family.png)
@@ -100,6 +76,32 @@ From here the response is the deviation of path loss from the link's previous-ho
 Adding the link's earlier packets halves RMSE and brings the 99% margin from about 19 dB to between 8.8 and 11.8 dB in every family. The later rungs lower RMSE further, to 1.8 dB for the boosted trees, but change the margin by less than 1 dB: channel, clock, spreading factor, earlier SNR, sensors and geometry do not reduce the deep-fade tail. At the last rung the boosted trees, the random forest, the ANN and the GRU end between 1.82 and 1.92 dB; kNN and the linear model are 0.4 to 0.6 dB behind. The GRU reads the raw sequence of the last 30 packets, with spreading factor and channel as indicators; it matches the engineered windows and does not improve on them.
 
 Fitted on five links and tested on the sixth (rung 2), the tree ensembles and the GRU reach 2.0 dB on average and 2.2 dB on the worst link, within 0.1 dB of the same models with the link in training; the ANN reaches 2.1 dB, kNN 2.3 dB and the linear model 2.4 dB. Coverage at the calibrated 99% margin is 99.7% on the unseen link (99.6% for the GRU).
+
+### Mean absolute error and correlation
+
+Notebook 21 adds the mean absolute error and the Pearson correlation between measurement and prediction, on the 531,983 hold-out packets that every model predicts, with 95% intervals from resampling days. The correlation is given twice: over all links, and within each link, after removing the mean of the link from the measurement and from the prediction, which measures whether a model follows the variation of a link in time.
+
+| Model | MAE | RMSE | Bias | R² | r, all links | r, within link |
+|---|---|---|---|---|---|---|
+| COST 231 multi-wall (calibrated) | 5.09 [4.85, 5.34] | 6.38 | +1.49 | 0.845 | 0.924 [0.918, 0.931] | -0.11 [-0.12, -0.09] |
+| Linear regression (Lasso) | 4.15 [3.98, 4.33] | 5.25 | +1.46 | 0.895 | 0.951 [0.945, 0.956] | -0.10 [-0.18, -0.04] |
+| Random forest | 3.92 [3.75, 4.11] | 4.93 | +1.30 | 0.907 | 0.957 [0.951, 0.962] | -0.05 [-0.11, +0.00] |
+| XGBoost | 3.75 [3.56, 3.96] | 4.83 | +0.82 | 0.911 | 0.958 [0.952, 0.964] | +0.00 [-0.06, +0.05] |
+| LightGBM | 3.87 [3.70, 4.04] | 4.87 | +1.45 | 0.910 | 0.958 [0.953, 0.963] | +0.13 [+0.11, +0.14] |
+| k-nearest neighbours | 3.89 [3.69, 4.10] | 5.01 | +0.59 | 0.904 | 0.960 [0.954, 0.965] | +0.11 [+0.06, +0.17] |
+| ANN (MLP) | 3.89 [3.63, 4.19] | 5.08 | -0.24 | 0.901 | 0.956 [0.948, 0.963] | -0.12 [-0.20, -0.04] |
+| Link mean (no model) | 4.01 [3.84, 4.19] | 5.04 | +1.47 | 0.903 | 0.957 [0.951, 0.961] | constant per link |
+| Previous-hour mean (no model) | 2.05 [2.01, 2.08] | 2.71 | +0.00 | 0.972 | 0.986 [0.985, 0.987] | +0.78 [+0.75, +0.81] |
+| LightGBM + link history | 1.75 [1.73, 1.78] | 2.34 | +0.01 | 0.979 | 0.990 [0.989, 0.990] | +0.84 [+0.82, +0.86] |
+| LightGBM + channel, clock, SF | 1.43 [1.41, 1.45] | 1.95 | +0.00 | 0.986 | 0.993 [0.992, 0.993] | +0.89 [+0.88, +0.91] |
+| LightGBM + link level, geometry | 1.32 [1.30, 1.34] | 1.82 | +0.02 | 0.987 | 0.994 [0.993, 0.994] | +0.91 [+0.89, +0.92] |
+| GRU + channel, clock, SF | 1.45 [1.43, 1.47] | 1.97 | +0.07 | 0.985 | 0.993 [0.992, 0.993] | +0.89 [+0.88, +0.90] |
+
+*MAE, RMSE and bias in dB; r is the Pearson correlation between measured and predicted path loss. The first seven rows use geometry and sensors only; the last four use the rungs of the table above.*
+
+- **Over all links the correlation mostly identifies the link.** The mean path loss of the links spans 43 dB (67 dB for ED0, 110 dB for ED5) and 93% of the variance of the path loss on the hold-out lies between the links, so one constant per link scores 0.957 and every static machine-learning model between 0.951 and 0.960. COST 231 scores 0.924, the models with link history 0.988 to 0.994.
+- **Within a link no static model follows the path loss in time.** Their correlation lies between -0.12 and +0.13, the previous-hour mean alone reaches 0.78 and the models with link history 0.81 to 0.91. The -0.11 of the physical models is the channel: the carrier frequency is their only input that changes within a link, a term of 0.005 dB, and a correlation does not depend on scale, so it equals the correlation of the measured path loss with the frequency.
+- **The MAE agrees with the RMSE except among models that lie close together.** The random forest, kNN, the ANN and the link mean change places: the ANN, for example, is ahead of the link mean by MAE (3.89 against 4.01 dB) and behind it by RMSE (5.08 against 5.04 dB). The static machine-learning models reach 3.75 dB (XGBoost) to 4.15 dB (linear), COST 231 5.09 dB and the models with link history 1.3 to 1.9 dB. The fitted static models and the link mean are biased by -0.2 to +1.5 dB on the summer hold-out, the models with link history by at most 0.17 dB.
 
 ### Calibrating and validating the margins
 
