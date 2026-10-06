@@ -19,9 +19,10 @@ RUNGS = {"H1 link history": H1, "H2 + same-channel history": H2, "H3 + clock": H
          "H5 + SNR of earlier packets": H5, "H6 + environmental sensors": H6, "H7 + link level and geometry": H7}
 
 
-def build(d, anchor="m1h"):
-    """d: one row per packet with device_id, t (UTC datetime), PL, frequency, SF, snr, co2 and fold. Returns a copy sorted by link
-    and time with the history features, the anchor `a` (column `anchor`, with fallbacks m60 then m20) and the target y."""
+def build(d, anchor="m1h", tz="Europe/Berlin"):
+    """d: one row per packet with device_id, t (UTC datetime), PL, frequency, SF, snr and fold, and co2 when there is a CO2 sensor. Returns a copy
+    sorted by link and time with the history features, the anchor `a` (column `anchor`, with fallbacks m60 then m20) and the target y. The clock
+    features use the local time zone tz."""
     d = d.sort_values(["device_id", "t"]).reset_index(drop=True)
     g = d.groupby("device_id", sort=False)
 
@@ -51,9 +52,10 @@ def build(d, anchor="m1h"):
 
     d["snr1"] = g["snr"].shift(1)                                 # SNR of earlier packets only
     d["snr20"] = g["snr"].transform(lambda s: s.shift(1).rolling(20, min_periods=10).mean())
-    d["co2ex"] = d["co2"] - g["co2"].transform(lambda s: s.shift(1).rolling(1440, min_periods=200).min())
+    if "co2" in d:
+        d["co2ex"] = d["co2"] - g["co2"].transform(lambda s: s.shift(1).rolling(1440, min_periods=200).min())
 
-    local = d["t"].dt.tz_convert("Europe/Berlin")
+    local = d["t"].dt.tz_convert(tz)
     hour = local.dt.hour + local.dt.minute / 60
     d["hsin"], d["hcos"] = np.sin(2 * np.pi * hour / 24), np.cos(2 * np.pi * hour / 24)
     d["dow"] = local.dt.weekday
