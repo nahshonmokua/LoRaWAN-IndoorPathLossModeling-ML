@@ -197,6 +197,17 @@ Notebook 20 runs the same procedure on the public urban measurements of Gonzále
 - **The SNR of the same packet buys what history buys.** Added to the static inputs it lowers the RMSE from 2.12 to 1.48 dB, close to the 1.54 dB of the link's own history. This is the gain of the published models, and it is leakage: the SNR of a packet is not known before the packet is received.
 - **The refinements of the calibration matter less there.** The data hold one regime, spreading factors 7 to 10 throughout, and the quantile model lowers the pinball loss by 1 to 2%.
 
+**A link the model has never seen.** As in the office (notebook 13), the model is fitted on three links, its 99% margin calibrated on their later packets, and both are tested on the fourth link's hold-out; the margin is either kept as calibrated or adapted to the link's own misses as they occur (adaptive conformal inference).
+
+| Link | Static inputs, unseen | Rung H1, unseen / in training | Rung H4, unseen / in training | 99% coverage at rung H4, fixed / adaptive |
+|---|---|---|---|---|
+| EN1 | 7.34 | 1.77 / 1.71 | 1.67 / 1.46 | 96.3 / 99.0% |
+| EN2 (673 hold-out packets) | 4.38 | 1.60 / 1.58 | 1.35 / 1.23 | 98.4 / 98.7% |
+| EN3 (SF10 only) | 5.74 | 1.61 / 1.57 | 1.67 / 1.36 | 89.5 / 99.0% |
+| EN4 | 9.16 | 1.33 / 1.31 | 1.22 / 1.15 | 98.9 / 99.0% |
+
+*Hold-out RMSE in dB. The static model fitted on three links misses the fourth by 4.4 to 9.2 dB, with biases of -6.7 to +8.9 dB: distance does not carry the level of a link the model has not seen. With link history the same fit lands within 0.02 to 0.06 dB (rung H1) and 0.08 to 0.31 dB (rung H4) of the fit that included the link. The margin calibrated on the other links covers 96 to 99% of the unseen link's packets, except on EN3 at rung H4 (89.5%): EN3 transmits at SF10 only, the other three cycle through SF7 to SF10, and on them SF10 packets read 0.2 to 1.0 dB below the previous-hour mean, so the model carries an SF10 offset that EN3's own anchor already contains. The adaptive shift restores 99.0% on EN3 with a 4.4 dB margin, and 98.2 to 99.0% on every link.*
+
 ## Model scope
 
 | Class | Models |
