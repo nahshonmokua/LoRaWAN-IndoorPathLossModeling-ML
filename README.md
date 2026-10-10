@@ -314,6 +314,7 @@ Run the numbered notebooks from the repository root. Their order is the dependen
 | Public dataset | [`20_Medellin_Ladder.ipynb`](20_Medellin_Ladder.ipynb) | The ladder on the public urban measurements |
 | Error metrics | [`21_Error_Metrics.ipynb`](21_Error_Metrics.ipynb) | MAE, bias and Pearson correlation, pooled and within link, for every model |
 | Second public dataset | [`22_UVA_Ladder.ipynb`](22_UVA_Ladder.ipynb) | The ladder, the margins under drift and the unseen-sensor test on the campus metadata |
+| Manuscript tables | [`23_Paper_Tables.ipynb`](23_Paper_Tables.ipynb) | Dataset by device, spreading-factor schedule, selected hyperparameters and software versions, as CSV and LaTeX (`Tables/`) |
 
 The full benchmark is compute-intensive. Approximate wall-clock times on a workstation with 32 CPU cores, 60 GB of RAM and one NVIDIA RTX 5090:
 
@@ -336,6 +337,7 @@ The full benchmark is compute-intensive. Approximate wall-clock times on a works
 | `20_Medellin_Ladder` | 5 min |
 | `21_Error_Metrics` | 30 s |
 | `22_UVA_Ladder` | 12 min |
+| `23_Paper_Tables` | 10 s |
 
 The other notebooks take minutes. Executed result cells document the reported runs, but generated search tables, data, models, residuals, and bulk analysis figures are intentionally excluded from version control and must be regenerated for a clean reproduction; the curated figures above are retained. Several notebook figures request Times New Roman and fall back to an installed font when it is unavailable.
 
