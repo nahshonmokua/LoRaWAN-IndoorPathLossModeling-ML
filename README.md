@@ -164,6 +164,7 @@ Notebook 19 repeats the static benchmark with one LightGBM tuned separately on e
 | geometry + channel | 4.89 | -0.14 [-0.19, -0.10] |
 | geometry + environment | 4.79 | -0.25 [-0.32, -0.18] |
 | geometry + channel + environment (the benchmark) | 4.86 | -0.17 [-0.23, -0.11] |
+| benchmark + SNR of the same packet | 4.70 | -0.34 [-0.45, -0.22] |
 | environment only | 15.74 | +10.70 [+10.23, +11.15] |
 | per-link mean | 5.04 |  |
 | global mean | 16.27 |  |
@@ -172,6 +173,7 @@ Notebook 19 repeats the static benchmark with one LightGBM tuned separately on e
 
 - **Every subset with the geometry is within 0.25 dB of the per-link mean.** The whole range is as large as the noise of the tuning: repeating the search and the fits for the same inputs moves the hold-out RMSE by up to 0.12 dB. Distance alone, which is the per-link mean up to shrinkage, lands 0.09 dB below it, so differences of that size are not resolved.
 - **The environment adds nothing resolvable.** The full model minus geometry and channel is -0.03 dB, with an interval from -0.07 to +0.02. The sensors alone remove 6.5% of the variance around one mean for all links, where the link identity removes 90%.
+- **The SNR of the same packet, the predictor of the submitted manuscript, is worth 0.17 dB here.** Added to the benchmark it lowers the hold-out RMSE from 4.87 to 4.70 dB (-0.17 [-0.29, -0.04]) and the 99% shift from 18.45 to 18.29 dB. It is known only once the packet has been received, so it cannot enter a link budget; on the two public datasets the same leak is worth 0.6 dB.
 - **The link's history is the step.** It lowers the RMSE by 2.5 to 2.7 dB in every family. In the LightGBM the same-channel history gains a further 0.25 dB, the spreading factor 0.13 dB and the SNR of earlier packets 0.13 dB, while the clock, the sensors and the link level with the geometry add less than 0.01 dB each. All steps with their intervals are in `CV_Results/history_group_steps.csv`.
 
 ### The same ladder on an independent public dataset
