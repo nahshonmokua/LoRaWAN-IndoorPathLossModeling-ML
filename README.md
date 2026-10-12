@@ -10,7 +10,7 @@
 
 This study compares analytical and empirical indoor propagation laws, linear models, tree ensembles, nearest-neighbour regression and neural networks on a later period of LoRaWAN path loss measurements. It then uses out-of-fold errors to estimate fade margins at specified residual-coverage targets, and asks how those margins depend on what the predictor knows: geometry and environmental sensors only, or also the link's own earlier packets.
 
-RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 18.7 to 19.3 dB for every model, although held-out RMSE ranges from 4.8 to 6.4 dB. With the link's earlier packets it falls to 8.8 to 11.8 dB when calibrated on the whole year, which includes SF11 and SF12 rows that the hold-out lacks. A margin that also conditions on the spreading factor and the state of the link needs 4 to 5 dB on the hold-out. Notebooks 17 to 22 test the margins as quantile forecasts, compare the history models with the estimators of adaptive data rate schemes, measure what each group of inputs adds, repeat the ladder on two public datasets, and report the mean absolute error and the correlation within each link.
+RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 18.8 to 19.3 dB for every model, although held-out RMSE ranges from 4.8 to 6.4 dB. With the link's earlier packets it falls to 8.8 to 11.8 dB when calibrated on the whole year, which includes SF11 and SF12 rows that the hold-out lacks. A margin that also conditions on the spreading factor and the state of the link needs 4 to 5 dB on the hold-out. Notebooks 17 to 22 test the margins as quantile forecasts, compare the history models with the estimators of adaptive data rate schemes, measure what each group of inputs adds, repeat the ladder on two public datasets, and report the mean absolute error and the correlation within each link.
 
 ## Experimental design
 
@@ -44,14 +44,14 @@ Early stopping uses the latest part of each training set in time order: the late
 | Random forest | 6.32 | 4.93 | 0.907 | 11.0 | 19.2 |
 | XGBoost | 6.36 | 4.83 | 0.911 | 11.3 | 19.2 |
 | LightGBM | 6.34 | 4.87 | 0.910 | 10.7 | 19.2 |
-| k-nearest neighbours | 6.45 | 4.79 | 0.913 | 10.9 | 18.7 |
+| k-nearest neighbours | 6.44 | 4.78 | 0.913 | 10.9 | 18.8 |
 | ANN (MLP) | 6.58 | 5.09 | 0.901 | 11.7 | 19.3 |
 
 *RMSE in dB. Out-of-fold RMSE pools the 1,773,515 validation rows; R² is computed from the held-out residual files; margins in dB at the 95% and 99% residual-coverage targets.*
 
-kNN leads at 4.79 dB (95% CI 4.55 to 5.02), with XGBoost at 4.83 and LightGBM at 4.87 dB; the paired block bootstrap does not separate these three. All three are resolved ahead of the random forest, by 0.06 to 0.15 dB, and of the linear model, by 0.38 to 0.47 dB; kNN and XGBoost are also resolved ahead of the ANN, by 0.30 and 0.26 dB. The kNN's $k$ was searched from 100 to 10,000 and, since the search selected its bound, refined beyond it on the same folds to an interior optimum, $k$ = 28,000 (notebook 06). Every data-driven model beats the calibrated COST 231 multi-wall model by at least 1.1 dB and the fixed-parameter propagation models by at least 1.9 dB.
+kNN leads at 4.78 dB (95% CI 4.54 to 5.02), with XGBoost at 4.83 and LightGBM at 4.87 dB; the paired block bootstrap does not separate these three. All three are resolved ahead of the random forest, by 0.06 to 0.15 dB, and of the linear model, by 0.38 to 0.47 dB; kNN and XGBoost are also resolved ahead of the ANN, by 0.30 and 0.26 dB. The kNN's $k$ was searched from 100 to 50,000 together with the metric, the weighting and the scaling; the selected $k$ = 30,677 (Manhattan distance, distance weights) lies inside that range; it is 1.4% of the training rows, about 9% of the packets of one link, so the prediction is a heavily smoothed average. Every data-driven model beats the calibrated COST 231 multi-wall model by at least 1.1 dB and the fixed-parameter propagation models by at least 1.9 dB.
 
-At a 99% residual-coverage target every static model needs 18.7 to 19.3 dB, at 98% 16.0 to 16.7 dB and at 95% 10.7 to 11.7 dB; the largest saving against the linear model at 99% is 0.48 dB, for kNN. At the 98% and 99% targets calibration takes the conservative maximum of the empirical and three-component Gaussian-mixture tail estimates; the 95% target uses the empirical quantile. Held-out coverage at the 99% margin is 99.7 to 99.8%, and a fixed 10 dB margin reaches 96.0 to 98.2%. Empirical-quantile intervals use device-aware moving blocks; Gaussian-mixture tail intervals are parametric.
+At a 99% residual-coverage target every static model needs 18.8 to 19.3 dB, at 98% 16.0 to 16.7 dB and at 95% 10.7 to 11.7 dB; the largest saving against the linear model at 99% is 0.43 dB, for kNN. At the 98% and 99% targets calibration takes the conservative maximum of the empirical and three-component Gaussian-mixture tail estimates; the 95% target uses the empirical quantile. Held-out coverage at the 99% margin is 99.7 to 99.8%, and a fixed 10 dB margin reaches 96.0 to 98.2%. Empirical-quantile intervals use device-aware moving blocks; Gaussian-mixture tail intervals are parametric.
 
 ### Link history
 
@@ -67,7 +67,7 @@ From here the response is the deviation of path loss from the link's previous-ho
 | Random forest | 4.93 / 19.2 | 2.35 / 11.0 | 1.98 / 10.2 | 1.87 / 10.5 | 1.87 / 10.4 |
 | XGBoost | 4.83 / 19.2 | 2.34 / 10.9 | 1.95 / 10.0 | 1.82 / 10.2 | 1.82 / 10.1 |
 | LightGBM | 4.87 / 19.2 | 2.34 / 10.8 | 1.95 / 10.0 | 1.82 / 10.2 | 1.82 / 10.1 |
-| k-nearest neighbours | 4.79 / 18.7 | 2.46 / 11.2 | 2.16 / 10.7 | 2.16 / 11.0 | 2.19 / 11.1 |
+| k-nearest neighbours | 4.78 / 18.8 | 2.46 / 11.2 | 2.16 / 10.7 | 2.16 / 11.0 | 2.19 / 11.1 |
 | ANN (MLP) | 5.09 / 19.3 | 2.50 / 11.1 | 1.99 / 10.1 | 1.92 / 10.4 | 1.92 / 10.4 |
 | GRU | not defined | 2.53 / 9.2 | 1.97 / 8.8 | 1.90 / 9.1 | 1.92 / 9.0 |
 
@@ -88,7 +88,7 @@ Notebook 21 adds the mean absolute error and the Pearson correlation between mea
 | Random forest | 3.92 [3.75, 4.11] | 4.93 | +1.30 | 0.907 | 0.957 [0.951, 0.962] | -0.05 [-0.11, +0.00] |
 | XGBoost | 3.75 [3.56, 3.96] | 4.83 | +0.82 | 0.911 | 0.958 [0.952, 0.964] | +0.00 [-0.06, +0.05] |
 | LightGBM | 3.87 [3.70, 4.04] | 4.87 | +1.45 | 0.910 | 0.958 [0.953, 0.963] | +0.13 [+0.11, +0.14] |
-| k-nearest neighbours | 3.71 [3.51, 3.92] | 4.79 | +0.85 | 0.913 | 0.961 [0.955, 0.966] | +0.03 [-0.03, +0.10] |
+| k-nearest neighbours | 3.70 [3.51, 3.91] | 4.78 | +0.84 | 0.913 | 0.961 [0.955, 0.966] | +0.05 [-0.02, +0.11] |
 | ANN (MLP) | 3.89 [3.63, 4.19] | 5.08 | -0.24 | 0.901 | 0.956 [0.948, 0.963] | -0.12 [-0.20, -0.04] |
 | Link mean (no model) | 4.01 [3.84, 4.19] | 5.04 | +1.47 | 0.903 | 0.957 [0.951, 0.961] | constant per link |
 | Previous-hour mean (no model) | 2.05 [2.01, 2.08] | 2.71 | +0.00 | 0.972 | 0.986 [0.985, 0.987] | +0.78 [+0.75, +0.81] |
@@ -101,7 +101,7 @@ Notebook 21 adds the mean absolute error and the Pearson correlation between mea
 
 - **Over all links the correlation mostly identifies the link.** The mean path loss of the links spans 43 dB (67 dB for ED0, 110 dB for ED5) and 93% of the variance of the path loss on the hold-out lies between the links, so one constant per link scores 0.957 and every static machine-learning model between 0.951 and 0.961. COST 231 scores 0.924, the models with link history 0.988 to 0.994.
 - **Within a link no static model follows the path loss in time.** Their correlation lies between -0.12 and +0.13, the previous-hour mean alone reaches 0.78 and the models with link history 0.81 to 0.91. The -0.11 of the physical models is the channel: the carrier frequency is their only input that changes within a link, a term of 0.005 dB, and a correlation does not depend on scale, so it equals the correlation of the measured path loss with the frequency.
-- **The MAE agrees with the RMSE except among models that lie close together.** The random forest, the ANN and the link mean change places: the ANN, for example, is ahead of the link mean by MAE (3.89 against 4.01 dB) and behind it by RMSE (5.08 against 5.04 dB). The static machine-learning models reach 3.71 dB (kNN) to 4.15 dB (linear), COST 231 5.09 dB and the models with link history 1.3 to 1.9 dB. The fitted static models and the link mean are biased by -0.2 to +1.5 dB on the summer hold-out, the models with link history by at most 0.17 dB.
+- **The MAE agrees with the RMSE except among models that lie close together.** The random forest, the ANN and the link mean change places: the ANN, for example, is ahead of the link mean by MAE (3.89 against 4.01 dB) and behind it by RMSE (5.08 against 5.04 dB). The static machine-learning models reach 3.70 dB (kNN) to 4.15 dB (linear), COST 231 5.09 dB and the models with link history 1.3 to 1.9 dB. The fitted static models and the link mean are biased by -0.2 to +1.5 dB on the summer hold-out, the models with link history by at most 0.17 dB.
 
 ### Calibrating and validating the margins
 
@@ -325,7 +325,7 @@ The full benchmark is compute-intensive. Approximate wall-clock times on a works
 | `03_RF` | 5.2 h (Bayesian search, 60 candidates) |
 | `04_XGBoost` | 8 min (CUDA) |
 | `05_LightGBM` | 48 min |
-| `06_kNN` | 14.2 h search (400 candidates, $k$ up to 10,000) and 47 min refinement of $k$ with the final fit (RAPIDS GPU) |
+| `06_kNN` | 20.1 h search (400 candidates, $k$ up to 50,000) and 34 min for the final fit and diagnostics (RAPIDS GPU) |
 | `07_ANN` | 4.0 h (CPU, deterministic operations; two-stage screen, 30-seed final ensemble) |
 | `09_FADE MARGIN ANALYSIS` | 1.0 h |
 | `12_History_Features` | 8 min |
