@@ -7,19 +7,19 @@
 Model & Selected setting \\
 \midrule
 static: Linear regression (Lasso) & alpha 0.3728 \\
-static: Random forest & n\_estimators 365, max\_depth 3, min\_samples\_split 80, min\_samples\_leaf 11, max\_features 0.6412, max\_samples 0.9867 \\
-static: XGBoost & n\_estimators 349, max\_depth 4, learning\_rate 0.01081, min\_child\_weight 57.45, gamma 10, subsample 0.8226, colsample\_bytree 0.7597, reg\_alpha 0.9884, reg\_lambda 1.079 \\
-static: LightGBM & n\_estimators 410, num\_leaves 96, max\_depth 1, learning\_rate 0.0188, min\_child\_samples 1553, min\_child\_weight 0.001, subsample 0.868, colsample\_bytree 0.8895, reg\_alpha 50, reg\_lambda 6.951 \\
+static: Random forest & n\_estimators 358, max\_depth 3, min\_samples\_split 176, min\_samples\_leaf 17, max\_features 0.5383, max\_samples 0.8202 \\
+static: XGBoost & n\_estimators 397, max\_depth 1, learning\_rate 0.02231, min\_child\_weight 54.35, gamma 3.929, subsample 0.6781, colsample\_bytree 0.933, reg\_alpha 0.0001, reg\_lambda 20 \\
+static: LightGBM & n\_estimators 440, num\_leaves 95, max\_depth 1, learning\_rate 0.02033, min\_child\_samples 3031, min\_child\_weight 30, subsample 0.7802, colsample\_bytree 0.5963, reg\_alpha 500, reg\_lambda 0.003914 \\
 static: k-nearest neighbours & n\_neighbors 30677, weights distance, metric manhattan, scaler StandardScaler, power transform none \\
 static: ANN (multilayer perceptron) & hidden layers [20, 10], L2 0.0001, dropout 0, learning rate 0.001, parameters 511, final ensemble 30 seeds \\
-history (rungs H1 to H7): Random forest & max\_depth 16, max\_features 0.7069, max\_samples 0.9, min\_samples\_leaf 20 \\
-history (rungs H1 to H7): XGBoost & colsample\_bytree 0.9064, learning\_rate 0.01581, max\_depth 9, min\_child\_weight 200, n\_estimators 1427, reg\_lambda 0.581, subsample 0.6204 \\
+history (rungs H1 to H7): Random forest & max\_depth 27, max\_features 0.565, max\_samples 1, min\_samples\_leaf 5 \\
+history (rungs H1 to H7): XGBoost & colsample\_bytree 0.7659, learning\_rate 0.01754, max\_depth 9, min\_child\_weight 205.7, n\_estimators 1216, reg\_lambda 0.863, subsample 0.8023 \\
 history (rungs H1 to H7): LightGBM & colsample\_bytree 0.9062, learning\_rate 0.01673, min\_child\_samples 606, n\_estimators 1244, num\_leaves 141, reg\_lambda 0.1724, subsample 0.9023 \\
 history (rungs H1 to H7): ANN (multilayer perceptron) & hidden layers [32, 16], final ensemble 3 seeds \\
 history (rungs H1 to H7): k-nearest neighbours & metric manhattan, n\_neighbors 45, weights distance \\
-history (rungs H1 to H7): GRU & units 64, sequence length 30, width screen 16: 2.708; 32: 2.684; 64: 2.677; 128: 2.707, final ensemble 3 seeds \\
-public data, Medellín: LightGBM & colsample\_bytree 0.6172, learning\_rate 0.01128, min\_child\_samples 20, n\_estimators 1245, num\_leaves 42, reg\_lambda 24.67, subsample 0.7633 \\
-public data, campus: LightGBM & colsample\_bytree 0.8698, learning\_rate 0.0249, min\_child\_samples 655, n\_estimators 915, num\_leaves 45, reg\_lambda 0.2761, subsample 0.8528 \\
+history (rungs H1 to H7): GRU & units 64, sequence length 30, width screen 16: 2.708; 32: 2.683; 64: 2.677; 128: 2.706, final ensemble 3 seeds \\
+public data, Medellín: LightGBM & colsample\_bytree 0.6172, learning\_rate 0.01128, min\_child\_samples 5, n\_estimators 1245, num\_leaves 42, reg\_lambda 24.67, subsample 0.7633 \\
+public data, campus: LightGBM & colsample\_bytree 0.944, learning\_rate 0.01046, min\_child\_samples 5, n\_estimators 719, num\_leaves 255, reg\_lambda 0.3134, subsample 0.8366 \\
 \bottomrule
 \end{tabular}
 \end{table}
