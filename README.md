@@ -61,21 +61,21 @@ At a 99% residual-coverage target every static model needs 17.9 to 18.6 dB, at 9
 
 From here the response is the deviation of path loss from the link's previous-hour mean, so the inputs are level-free and a model that learns nothing scores as the previous-hour mean. The rungs are cumulative: (1) the link's earlier path loss as lags and windows from five packets to seven days; (2) the history of the same channel, the clock and the spreading factor; (3) the SNR of earlier packets and the environmental sensors; (4) the link's level and its geometry. Every feature of a packet uses earlier packets of the same link only.
 
-| Family | Geometry + sensors | + link history | + channel, clock, SF | + earlier SNR, sensors | + link level, geometry |
-|---|---|---|---|---|---|
-| Linear regression | 5.25 / 18.2 | 2.51 / 9.9 | 2.39 / 9.8 | 2.37 / 9.9 | 2.37 / 9.9 |
-| Random forest | 4.87 / 17.9 | 2.34 / 9.1 | 1.97 / 8.0 | 1.84 / 8.0 | 1.84 / 8.0 |
-| XGBoost | 4.86 / 18.4 | 2.34 / 9.1 | 1.95 / 7.9 | 1.82 / 7.9 | 1.82 / 7.9 |
-| LightGBM | 4.85 / 18.6 | 2.34 / 9.1 | 1.95 / 7.9 | 1.82 / 7.9 | 1.82 / 7.9 |
-| k-nearest neighbours | 4.78 / 17.9 | 2.46 / 9.6 | 2.16 / 9.0 | 2.16 / 9.2 | 2.19 / 9.4 |
-| ANN (MLP) | 5.09 / 18.6 | 2.50 / 9.4 | 1.99 / 8.0 | 1.92 / 8.0 | 1.92 / 8.0 |
-| GRU | not defined | 2.53 / 7.5 | 1.96 / 6.9 | 1.90 / 6.8 | 1.91 / 6.7 |
+| Family | Static | H1: link history | H2: + channel history | H3: + clock | H4: + SF | H5: + earlier SNR | H6: + sensors | H7: + level, geometry |
+|---|---|---|---|---|---|---|---|---|
+| Linear regression | 5.25 / 18.2 | 2.51 / 9.9 | 2.40 / 9.7 | 2.40 / 9.7 | 2.39 / 9.8 | 2.37 / 9.9 | 2.37 / 9.9 | 2.37 / 9.9 |
+| Random forest | 4.87 / 17.9 | 2.34 / 9.1 | 2.18 / 8.9 | 2.18 / 8.9 | 1.97 / 8.0 | 1.84 / 8.0 | 1.84 / 8.0 | 1.84 / 8.0 |
+| XGBoost | 4.86 / 18.4 | 2.34 / 9.1 | 2.09 / 8.6 | 2.09 / 8.6 | 1.95 / 7.9 | 1.82 / 7.9 | 1.82 / 7.9 | 1.82 / 7.9 |
+| LightGBM | 4.85 / 18.6 | 2.34 / 9.1 | 2.09 / 8.5 | 2.08 / 8.5 | 1.95 / 7.9 | 1.82 / 7.9 | 1.82 / 7.9 | 1.82 / 7.9 |
+| k-nearest neighbours | 4.78 / 17.9 | 2.46 / 9.6 | 2.32 / 9.5 | 2.35 / 9.6 | 2.16 / 9.0 | 2.12 / 9.0 | 2.16 / 9.2 | 2.19 / 9.4 |
+| ANN (MLP) | 5.09 / 18.6 | 2.50 / 9.4 | 2.33 / 9.2 | 2.33 / 9.2 | 1.99 / 8.0 | 1.92 / 8.0 | 1.92 / 8.0 | 1.92 / 8.0 |
+| GRU | not defined | 2.52 / 7.5 | 2.49 / 7.4 | 2.49 / 7.4 | 1.97 / 6.9 | 1.90 / 6.8 | 1.91 / 6.8 | 1.92 / 6.7 |
 
-*Hold-out RMSE / 99% fade margin, both in dB. The first column is the static model of the table above. The GRU reads the last 30 packets of the link, with the windows that reach further back as static inputs, and is defined only where a history exists. Without a fitted model: link mean 5.04 dB / 18.3 dB; previous-hour mean 2.71 dB / 10.6 dB; previous packet 3.04 dB / 12.0 dB.*
+*Hold-out RMSE / 99% fade margin, both in dB; the rungs are cumulative from left to right. The static column is the model of the table above. The GRU reads the last 30 packets of the link, with the windows that reach further back as static inputs, and is defined only where a history exists. Without a fitted model: link mean 5.04 dB / 18.3 dB; previous-hour mean 2.71 dB / 10.6 dB; previous packet 3.04 dB / 12.0 dB.*
 
 Adding the link's earlier packets halves RMSE and brings the 99% margin from about 18 dB to between 7.5 and 9.9 dB in every family. The later rungs lower RMSE further, to 1.8 dB for the boosted trees, and the margin by at most 1.4 dB more (the boosted trees reach 7.9 dB, the GRU 6.7 dB): channel, clock, spreading factor, earlier SNR, sensors and geometry reduce the deep-fade tail only a little. At the last rung the boosted trees, the random forest, the ANN and the GRU end between 1.82 and 1.92 dB; kNN and the linear model are 0.4 to 0.6 dB behind. The GRU reads the raw sequence of the last 30 packets, with spreading factor and channel as indicators; it matches the engineered windows and does not improve on them.
 
-Fitted on five links and tested on the sixth (rung 2), the tree ensembles and the GRU reach 2.0 dB on average and 2.2 dB on the worst link, within 0.1 dB of the same models with the link in training; the ANN reaches 2.1 dB, kNN 2.3 dB and the linear model 2.4 dB. Coverage at the calibrated 99% margin is 99.7% on the unseen link (99.6% for the GRU).
+Fitted on five links and tested on the sixth (rung H4), the tree ensembles and the GRU reach 2.0 to 2.1 dB on average and 2.2 dB on the worst link, within 0.1 dB of the same models with the link in training; the ANN reaches 2.1 dB, kNN 2.3 dB and the linear model 2.4 dB. Coverage at the calibrated 99% margin is 99.7% on the unseen link (99.6% for the GRU).
 
 ### Mean absolute error and correlation
 
@@ -174,7 +174,19 @@ Notebook 19 repeats the static benchmark with one LightGBM tuned separately on e
 - **Every subset with the geometry is within 0.25 dB of the per-link mean.** The whole range is as large as the noise of the tuning: repeating the search and the fits for the same inputs moves the hold-out RMSE by up to 0.12 dB. Distance alone, which is the per-link mean up to shrinkage, lands 0.09 dB below it, so differences of that size are not resolved.
 - **The environment adds nothing resolvable.** The full model minus geometry and channel is -0.03 dB, with an interval from -0.07 to +0.02. The sensors alone remove 6.5% of the variance around one mean for all links, where the link identity removes 90%.
 - **The SNR of the same packet, the predictor of the submitted manuscript, is worth 0.17 dB here.** Added to the benchmark it lowers the hold-out RMSE from 4.87 to 4.70 dB (-0.17 [-0.29, -0.04]) and the 99% shift from 18.45 to 18.29 dB. It is known only once the packet has been received, so it cannot enter a link budget; on the two public datasets the same leak is worth 0.6 dB.
-- **The link's history is the step.** It lowers the RMSE by 2.3 to 2.7 dB in every family. In the LightGBM the same-channel history gains a further 0.25 dB, the spreading factor 0.13 dB and the SNR of earlier packets 0.13 dB, while the clock, the sensors and the link level with the geometry add less than 0.01 dB each. All steps with their intervals are in `CV_Results/history_group_steps.csv`.
+- **The link's history is the step.** It lowers the RMSE by 2.32 to 2.74 dB in every family. Of the groups that follow, the same-channel history changes the hold-out RMSE by -0.25 to -0.03 dB over the families, the spreading factor by -0.53 to -0.01 dB and the SNR of earlier packets by -0.13 to -0.02 dB (negative: the added inputs help), while the clock, the sensors and the link level with the geometry change it by no more than 0.04 dB in any family (table below).
+
+| Step | Linear regression | Random forest | XGBoost | LightGBM | k-nearest neighbours | ANN (MLP) | GRU |
+|---|---|---|---|---|---|---|---|
+| static to H1: link history | **-2.74** | **-2.52** | **-2.52** | **-2.52** | **-2.32** | **-2.59** | – |
+| H1 to H2: same-channel history | **-0.11** | **-0.16** | **-0.24** | **-0.25** | **-0.14** | **-0.16** | **-0.03** |
+| H2 to H3: clock | **0.00** | 0.00 | **0.00** | **0.00** | **+0.03** | **0.00** | 0.00 |
+| H3 to H4: spreading factor | **-0.01** | **-0.21** | **-0.14** | **-0.13** | **-0.19** | **-0.33** | **-0.53** |
+| H4 to H5: earlier SNR | **-0.02** | **-0.12** | **-0.13** | **-0.13** | **-0.04** | **-0.08** | **-0.06** |
+| H5 to H6: sensors | **0.00** | **0.00** | **0.00** | **0.00** | **+0.04** | **0.00** | **+0.01** |
+| H6 to H7: level, geometry | 0.00 | **0.00** | **0.00** | 0.00 | **+0.04** | 0.00 | **+0.01** |
+
+*Hold-out RMSE of the later rung minus that of the earlier rung, in dB (negative: the added inputs help), on the packets common to all models; bold where the 95% interval from resampling days excludes zero. All steps with their intervals are in `CV_Results/history_group_steps.csv`.*
 
 ### The same ladder on an independent public dataset
 
@@ -329,15 +341,15 @@ The full benchmark is compute-intensive. Approximate wall-clock times on a works
 | `07_ANN` | 4.0 h (CPU, deterministic operations; two-stage screen, 30-seed final ensemble) |
 | `09_FADE MARGIN ANALYSIS` | 1.0 h |
 | `12_History_Features` | 8 min |
-| `13_History_Models` | 3.4 h |
-| `14_History_kNN` | 20 min |
-| `15_History_GRU` | 3.9 h (GPU) |
+| `13_History_Models` | 5.7 h |
+| `14_History_kNN` | 22 min |
+| `15_History_GRU` | 5.8 h (GPU) |
 | `16_Information_by_Family` | 33 min |
 | `17_Margin_Calibration` | 14 min |
 | `18_ADR_Estimators` | 1 min |
 | `19_Feature_Groups` | 14 min |
 | `20_Medellin_Ladder` | 6 min |
-| `21_Error_Metrics` | 30 s |
+| `21_Error_Metrics` | 40 s |
 | `22_UVA_Ladder` | 17 min |
 | `23_Paper_Tables` | 10 s |
 
