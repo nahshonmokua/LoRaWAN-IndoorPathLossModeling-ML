@@ -69,13 +69,13 @@ From here the response is the deviation of path loss from the link's previous-ho
 | LightGBM | 4.85 / 18.6 | 2.34 / 9.1 | 2.09 / 8.5 | 2.08 / 8.5 | 1.95 / 7.9 | 1.82 / 7.9 | 1.82 / 7.9 | 1.82 / 7.9 |
 | k-nearest neighbours | 4.78 / 17.9 | 2.46 / 9.6 | 2.32 / 9.5 | 2.35 / 9.6 | 2.16 / 9.0 | 2.12 / 9.0 | 2.16 / 9.2 | 2.19 / 9.4 |
 | ANN (MLP) | 5.09 / 18.6 | 2.50 / 9.4 | 2.33 / 9.2 | 2.33 / 9.2 | 1.99 / 8.0 | 1.92 / 8.0 | 1.92 / 8.0 | 1.92 / 8.0 |
-| GRU | not defined | 2.52 / 7.5 | 2.49 / 7.4 | 2.49 / 7.4 | 1.97 / 6.9 | 1.90 / 6.8 | 1.91 / 6.8 | 1.92 / 6.7 |
+| GRU | not defined | 2.53 / 7.5 | 2.48 / 7.4 | 2.50 / 7.4 | 1.97 / 6.9 | 1.90 / 6.8 | 1.92 / 6.8 | 1.91 / 6.7 |
 
 *Hold-out RMSE / 99% fade margin, both in dB; the rungs are cumulative from left to right. The static column is the model of the table above. The GRU reads the last 30 packets of the link, with the windows that reach further back as static inputs, and is defined only where a history exists. Without a fitted model: link mean 5.04 dB / 18.3 dB; previous-hour mean 2.71 dB / 10.6 dB; previous packet 3.04 dB / 12.0 dB.*
 
 Adding the link's earlier packets halves RMSE and brings the 99% margin from about 18 dB to between 7.5 and 9.9 dB in every family. The later rungs lower RMSE further, to 1.8 dB for the boosted trees, and the margin by at most 1.4 dB more (the boosted trees reach 7.9 dB, the GRU 6.7 dB): channel, clock, spreading factor, earlier SNR, sensors and geometry reduce the deep-fade tail only a little. At the last rung the boosted trees, the random forest, the ANN and the GRU end between 1.82 and 1.92 dB; kNN and the linear model are 0.4 to 0.6 dB behind. The GRU reads the raw sequence of the last 30 packets, with spreading factor and channel as indicators; it matches the engineered windows and does not improve on them.
 
-Fitted on five links and tested on the sixth (rung H4), the tree ensembles and the GRU reach 2.0 to 2.1 dB on average and 2.2 dB on the worst link, within 0.1 dB of the same models with the link in training; the ANN reaches 2.1 dB, kNN 2.3 dB and the linear model 2.4 dB. Coverage at the calibrated 99% margin is 99.7% on the unseen link (99.6% for the GRU).
+Fitted on five links and tested on the sixth (rung H4), against the same model fitted on the same blocks with the link included, the tree ensembles reach 2.02 to 2.06 dB on the unseen link, 0.01 dB above the model that saw the link; the ANN reaches 2.10 dB, kNN 2.28 dB, the GRU 2.00 dB and the linear model 2.40 dB, and the largest penalty in any family is 0.03 dB (the GRU). Coverage at the calibrated 99% margin is 99.7% on the unseen link (99.6% for the GRU).
 
 ### Mean absolute error and correlation
 
@@ -95,7 +95,7 @@ Notebook 21 adds the mean absolute error and the Pearson correlation between mea
 | LightGBM + link history | 1.75 [1.73, 1.78] | 2.34 | +0.01 | 0.979 | 0.990 [0.989, 0.990] | +0.84 [+0.82, +0.86] |
 | LightGBM + channel, clock, SF | 1.43 [1.41, 1.45] | 1.95 | +0.00 | 0.986 | 0.993 [0.992, 0.993] | +0.89 [+0.88, +0.91] |
 | LightGBM + link level, geometry | 1.32 [1.30, 1.34] | 1.82 | +0.02 | 0.987 | 0.994 [0.993, 0.994] | +0.91 [+0.89, +0.92] |
-| GRU + channel, clock, SF | 1.44 [1.43, 1.46] | 1.96 | +0.08 | 0.985 | 0.993 [0.992, 0.993] | +0.89 [+0.88, +0.90] |
+| GRU + channel, clock, SF | 1.45 [1.43, 1.47] | 1.97 | +0.01 | 0.985 | 0.993 [0.992, 0.993] | +0.89 [+0.88, +0.90] |
 
 *MAE, RMSE and bias in dB; r is the Pearson correlation between measured and predicted path loss. The first seven rows use geometry and sensors only; the last four use the rungs of the table above.*
 
@@ -139,18 +139,18 @@ Notebook 18 puts the estimators of adaptive data rate schemes on the same footin
 | Estimator of the current path loss | RMSE, dB | Coverage | Mean margin, dB | Pinball loss x 1000 | Difference to LightGBM |
 |---|---|---|---|---|---|
 | LightGBM on rung H4 | 1.95 | 99.3% | 5.03 | 65.3 |  |
-| GRU on rung H4 | 1.96 | 99.3% | 4.96 | 65.4 | +0.1 [-0.2, +0.4] |
-| exponential average, weight 0.1 | 2.62 | 99.4% | 5.69 | 70.9 | +5.5 [+5.1, +6.0] |
-| Kalman filter, drift 0.01 | 2.63 | 99.4% | 5.69 | 71.0 | +5.6 [+5.2, +6.1] |
-| mean of the last 20 | 2.63 | 99.5% | 5.93 | 72.6 | +7.3 [+6.9, +7.7] |
-| median of the last 20 | 2.69 | 99.5% | 6.21 | 75.6 | +10.3 [+9.8, +10.9] |
-| previous hour mean | 2.71 | 99.4% | 6.04 | 76.4 | +11.1 [+9.8, +12.4] |
-| linear regression over the last 20 | 3.03 | 99.1% | 6.15 | 77.4 | +12.0 [+11.2, +12.9] |
-| previous packet | 3.04 | 99.1% | 6.79 | 85.2 | +19.9 [+18.7, +21.0] |
-| 24 hour mean | 3.29 | 99.3% | 8.87 | 111.4 | +46.0 [+38.2, +55.7] |
-| best of the last 20 | 5.06 | 99.7% | 9.54 | 106.5 | +41.2 [+40.2, +42.3] |
+| GRU on rung H4 | 1.97 | 99.2% | 4.88 | 65.7 | +0.37 [+0.05, +0.76] |
+| exponential average, weight 0.1 | 2.62 | 99.4% | 5.69 | 70.9 | +5.55 [+5.10, +6.03] |
+| Kalman filter, drift 0.01 | 2.63 | 99.4% | 5.69 | 71.0 | +5.63 [+5.18, +6.13] |
+| mean of the last 20 | 2.63 | 99.5% | 5.93 | 72.6 | +7.30 [+6.89, +7.75] |
+| median of the last 20 | 2.69 | 99.5% | 6.21 | 75.6 | +10.30 [+9.81, +10.87] |
+| previous hour mean | 2.71 | 99.4% | 6.04 | 76.4 | +11.06 [+9.83, +12.37] |
+| linear regression over the last 20 | 3.03 | 99.1% | 6.15 | 77.4 | +12.04 [+11.21, +12.93] |
+| previous packet | 3.04 | 99.1% | 6.79 | 85.2 | +19.86 [+18.73, +21.03] |
+| 24 hour mean | 3.29 | 99.3% | 8.87 | 111.4 | +46.03 [+38.20, +55.72] |
+| best of the last 20 | 5.06 | 99.7% | 9.54 | 106.5 | +41.20 [+40.19, +42.26] |
 
-- **The learned history models beat every classical estimator.** The exponential average and the Kalman filter reach 2.62 dB, level with the mean of the last 20 packets, 2.63 dB, and close to the previous-hour mean, 2.71 dB. The LightGBM reaches 1.95 dB and the GRU 1.96 dB. Filtering is not what matters: the learned models gain from the longer windows, the same-channel history, the clock and the spreading factor, which the classical estimators do not use.
+- **The learned history models beat every classical estimator.** The exponential average and the Kalman filter reach 2.62 dB, level with the mean of the last 20 packets, 2.63 dB, and close to the previous-hour mean, 2.71 dB. The LightGBM reaches 1.95 dB and the GRU 1.97 dB. Filtering is not what matters: the learned models gain from the longer windows, the same-channel history and the spreading factor, which the classical estimators do not use.
 - **The standard rule is the weakest.** The best of the last 20 packets selects the extreme and estimates the level with a 5.06 dB RMSE. A fixed 10 dB above it covers 96.7% at a 99% target; the same 10 dB above the mean of the last 20 packets covers 99.9%.
 
 ### What each group of inputs adds
@@ -174,19 +174,19 @@ Notebook 19 repeats the static benchmark with one LightGBM tuned separately on e
 - **Every subset with the geometry is within 0.25 dB of the per-link mean.** The whole range is as large as the noise of the tuning: repeating the search and the fits for the same inputs moves the hold-out RMSE by up to 0.12 dB. Distance alone, which is the per-link mean up to shrinkage, lands 0.09 dB below it, so differences of that size are not resolved.
 - **The environment adds nothing resolvable.** The full model minus geometry and channel is -0.03 dB, with an interval from -0.07 to +0.02. The sensors alone remove 6.5% of the variance around one mean for all links, where the link identity removes 90%.
 - **The SNR of the same packet, the predictor of the submitted manuscript, is worth 0.17 dB here.** Added to the benchmark it lowers the hold-out RMSE from 4.87 to 4.70 dB (-0.17 [-0.29, -0.04]) and the 99% shift from 18.45 to 18.29 dB. It is known only once the packet has been received, so it cannot enter a link budget; on the two public datasets the same leak is worth 0.6 dB.
-- **The link's history is the step.** It lowers the RMSE by 2.32 to 2.74 dB in every family. Of the groups that follow, the same-channel history changes the hold-out RMSE by -0.25 to -0.03 dB over the families, the spreading factor by -0.53 to -0.01 dB and the SNR of earlier packets by -0.13 to -0.02 dB (negative: the added inputs help), while the clock, the sensors and the link level with the geometry change it by no more than 0.04 dB in any family (table below).
+- **The link's history is the step.** It lowers the RMSE by 2.32 to 2.74 dB in every family. Of the groups that follow, the same-channel history changes the hold-out RMSE by -0.25 to -0.05 dB over the families, the spreading factor by -0.53 to -0.01 dB and the SNR of earlier packets by -0.13 to -0.02 dB (negative: the added inputs help), while the clock, the sensors and the link level with the geometry change it by no more than 0.04 dB in any family (table below).
 
 | Step | Linear regression | Random forest | XGBoost | LightGBM | k-nearest neighbours | ANN (MLP) | GRU |
 |---|---|---|---|---|---|---|---|
 | static to H1: link history | -2.74 | -2.52 | -2.52 | -2.52 | -2.32 | -2.59 | – |
-| H1 to H2: same-channel history | -0.11 | -0.16 | -0.24 | -0.25 | -0.14 | -0.16 | -0.03 |
-| H2 to H3: clock | 0.00 | 0.00 | 0.00 | 0.00 | +0.03 | 0.00 | 0.00 |
+| H1 to H2: same-channel history | -0.11 | -0.16 | -0.24 | -0.25 | -0.14 | -0.16 | -0.05 |
+| H2 to H3: clock | 0.00 | 0.00 | 0.00 | 0.00 | +0.03 | 0.00 | +0.02 |
 | H3 to H4: spreading factor | -0.01 | -0.21 | -0.14 | -0.13 | -0.19 | -0.33 | -0.53 |
 | H4 to H5: earlier SNR | -0.02 | -0.12 | -0.13 | -0.13 | -0.04 | -0.08 | -0.06 |
-| H5 to H6: sensors | 0.00 | 0.00 | 0.00 | 0.00 | +0.04 | 0.00 | +0.01 |
-| H6 to H7: level, geometry | 0.00 | 0.00 | 0.00 | 0.00 | +0.04 | 0.00 | +0.01 |
+| H5 to H6: sensors | 0.00 | 0.00 | 0.00 | 0.00 | +0.04 | 0.00 | +0.02 |
+| H6 to H7: level, geometry | 0.00 | 0.00 | 0.00 | 0.00 | +0.04 | 0.00 | -0.01 |
 
-*Hold-out RMSE of the later rung minus that of the earlier rung, in dB (negative: the added inputs help), on the packets common to all models. The 95% intervals from resampling days have half-widths of 0.20 to 0.40 dB at the first step and at most 0.02 dB afterwards; they exclude zero except for Random forest, GRU (H2 to H3: clock); Linear regression, LightGBM, ANN (MLP) (H6 to H7: level, geometry). All steps with their intervals are in `CV_Results/history_group_steps.csv`.*
+*Hold-out RMSE of the later rung minus that of the earlier rung, in dB (negative: the added inputs help), on the packets common to all models. The 95% intervals from resampling days have half-widths of 0.20 to 0.40 dB at the first step and at most 0.02 dB afterwards; they exclude zero except for Random forest (H2 to H3: clock); Linear regression, LightGBM, ANN (MLP) (H6 to H7: level, geometry). All steps with their intervals are in `CV_Results/history_group_steps.csv`.*
 
 ### The same ladder on an independent public dataset
 
