@@ -178,15 +178,15 @@ Notebook 19 repeats the static benchmark with one LightGBM tuned separately on e
 
 | Step | Linear regression | Random forest | XGBoost | LightGBM | k-nearest neighbours | ANN (MLP) | GRU |
 |---|---|---|---|---|---|---|---|
-| static to H1: link history | **-2.74** | **-2.52** | **-2.52** | **-2.52** | **-2.32** | **-2.59** | – |
-| H1 to H2: same-channel history | **-0.11** | **-0.16** | **-0.24** | **-0.25** | **-0.14** | **-0.16** | **-0.03** |
-| H2 to H3: clock | **0.00** | 0.00 | **0.00** | **0.00** | **+0.03** | **0.00** | 0.00 |
-| H3 to H4: spreading factor | **-0.01** | **-0.21** | **-0.14** | **-0.13** | **-0.19** | **-0.33** | **-0.53** |
-| H4 to H5: earlier SNR | **-0.02** | **-0.12** | **-0.13** | **-0.13** | **-0.04** | **-0.08** | **-0.06** |
-| H5 to H6: sensors | **0.00** | **0.00** | **0.00** | **0.00** | **+0.04** | **0.00** | **+0.01** |
-| H6 to H7: level, geometry | 0.00 | **0.00** | **0.00** | 0.00 | **+0.04** | 0.00 | **+0.01** |
+| static to H1: link history | -2.74 | -2.52 | -2.52 | -2.52 | -2.32 | -2.59 | – |
+| H1 to H2: same-channel history | -0.11 | -0.16 | -0.24 | -0.25 | -0.14 | -0.16 | -0.03 |
+| H2 to H3: clock | 0.00 | 0.00 | 0.00 | 0.00 | +0.03 | 0.00 | 0.00 |
+| H3 to H4: spreading factor | -0.01 | -0.21 | -0.14 | -0.13 | -0.19 | -0.33 | -0.53 |
+| H4 to H5: earlier SNR | -0.02 | -0.12 | -0.13 | -0.13 | -0.04 | -0.08 | -0.06 |
+| H5 to H6: sensors | 0.00 | 0.00 | 0.00 | 0.00 | +0.04 | 0.00 | +0.01 |
+| H6 to H7: level, geometry | 0.00 | 0.00 | 0.00 | 0.00 | +0.04 | 0.00 | +0.01 |
 
-*Hold-out RMSE of the later rung minus that of the earlier rung, in dB (negative: the added inputs help), on the packets common to all models; bold where the 95% interval from resampling days excludes zero. All steps with their intervals are in `CV_Results/history_group_steps.csv`.*
+*Hold-out RMSE of the later rung minus that of the earlier rung, in dB (negative: the added inputs help), on the packets common to all models. The 95% intervals from resampling days have half-widths of 0.20 to 0.40 dB at the first step and at most 0.02 dB afterwards; they exclude zero except for Random forest, GRU (H2 to H3: clock); Linear regression, LightGBM, ANN (MLP) (H6 to H7: level, geometry). All steps with their intervals are in `CV_Results/history_group_steps.csv`.*
 
 ### The same ladder on an independent public dataset
 
