@@ -10,7 +10,7 @@
 
 This study compares analytical and empirical indoor propagation laws, linear models, tree ensembles, nearest-neighbour regression and neural networks on a later period of LoRaWAN path loss measurements. It then uses out-of-fold errors to estimate fade margins at specified residual-coverage targets, and asks how those margins depend on what the predictor knows: geometry and environmental sensors only, or also the link's own earlier packets.
 
-RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 17.9 to 18.6 dB for every model, although held-out RMSE ranges from 4.8 to 6.4 dB. With the link's earlier packets it falls to 6.7 to 9.9 dB when calibrated on the whole year, which includes SF11 and SF12 rows that the hold-out lacks. A margin that also conditions on the spreading factor and the state of the link needs 4 to 5 dB on the hold-out. Notebooks 17 to 22 test the margins as quantile forecasts, compare the history models with the estimators of adaptive data rate schemes, measure what each group of inputs adds, repeat the ladder on two public datasets, and report the mean absolute error and the correlation within each link.
+RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 17.9 to 18.6 dB for every learned model and the calibrated COST 231 multi-wall model, although held-out RMSE ranges from 4.8 to 6.4 dB. With the link's earlier packets it falls to 6.7 to 9.9 dB when calibrated on the whole year, which includes SF11 and SF12 rows that the hold-out lacks. A margin that also conditions on the spreading factor and the state of the link needs 4 to 5 dB on the hold-out. Notebooks 17 to 22 test the margins as quantile forecasts, compare the history models with the estimators of adaptive data rate schemes, measure what each group of inputs adds, repeat the ladder on two public datasets, and report the mean absolute error and the correlation within each link.
 
 ## Experimental design
 
@@ -51,7 +51,7 @@ Early stopping uses the latest part of each training set in time order: the late
 
 kNN leads at 4.78 dB (95% CI 4.54 to 5.02), with LightGBM at 4.85, XGBoost at 4.86 and the random forest at 4.87 dB; the paired block bootstrap does not separate these four (differences of at most 0.09 dB). All four are resolved ahead of the linear model, by 0.39 to 0.47 dB; kNN is also resolved ahead of the ANN, by 0.30 dB, while the ANN's gaps of 0.22 to 0.23 dB to the three tree ensembles are not. The kNN's $k$ was searched from 100 to 50,000 together with the metric, the weighting and the scaling; the selected $k$ = 30,677 (Manhattan distance, distance weights) lies inside that range; it is 1.4% of the training rows, about 9% of the packets of one link, so the prediction is a heavily smoothed average. Every data-driven model beats the calibrated COST 231 multi-wall model by at least 1.1 dB and the fixed-parameter propagation models by at least 1.9 dB.
 
-At a 99% residual-coverage target every static model needs 17.9 to 18.6 dB, at 98% 14.8 to 15.6 dB and at 95% 10.7 to 11.7 dB; the differences between the learned models (0.7 dB at 99%) are of the size of their mean biases, so no model is singled out by its margin. Every margin in this repository is the empirical quantile of the out-of-fold residuals, the split-conformal shift of `margin_tools.py`; a three-component Gaussian-mixture tail estimate is reported next to it as a sensitivity check and lies 0.3 to 1.0 dB above it at 99% for the static models and 1.8 to 2.1 dB above it for every family on history rung H4 (notebook 09). Held-out coverage at the 99% margin is 99.6 to 99.8%, and a fixed 10 dB margin reaches 96.0 to 98.3%. Intervals come from a device-aware moving-block bootstrap.
+At a 99% residual-coverage target the learned static models and COST 231 need 17.9 to 18.6 dB, at 98% 14.8 to 15.6 dB and at 95% 10.7 to 11.7 dB; the other propagation models need more. The spread between the learned models, 0.7 dB at 99%, is about a quarter of a spreading-factor step. Every margin in this repository is the empirical quantile of the out-of-fold residuals, the split-conformal shift of `margin_tools.py`; a three-component Gaussian-mixture tail estimate is reported next to it as a sensitivity check and lies 0.3 to 1.0 dB above it at 99% for the static models and 1.8 to 2.1 dB above it for every family on history rung H4 (notebook 09). Held-out coverage at the 99% margin is 99.6 to 99.8%, and a fixed 10 dB margin reaches 96.0 to 98.3%. Intervals come from a device-aware moving-block bootstrap.
 
 ### Link history
 
@@ -73,7 +73,7 @@ From here the response is the deviation of path loss from the link's previous-ho
 
 *Hold-out RMSE / 99% fade margin, both in dB; the rungs are cumulative from left to right. The static column is the model of the table above. The GRU reads the last 30 packets of the link, with the windows that reach further back as static inputs, and is defined only where a history exists. Without a fitted model: link mean 5.04 dB / 18.3 dB; previous-hour mean 2.71 dB / 10.6 dB; previous packet 3.04 dB / 12.0 dB.*
 
-Adding the link's earlier packets halves RMSE and brings the 99% margin from about 18 dB to between 7.5 and 9.9 dB in every family. The later rungs lower RMSE further, to 1.8 dB for the boosted trees, and the margin by at most 1.4 dB more (the boosted trees reach 7.9 dB, the GRU 6.7 dB): channel, clock, spreading factor, earlier SNR, sensors and geometry reduce the deep-fade tail only a little. At the last rung the boosted trees, the random forest, the ANN and the GRU end between 1.82 and 1.92 dB; kNN and the linear model are 0.4 to 0.6 dB behind. The GRU reads the raw sequence of the last 30 packets, with spreading factor and channel as indicators; it matches the engineered windows and does not improve on them.
+Adding the link's earlier packets halves RMSE and brings the 99% margin from about 18 dB to between 7.5 and 9.9 dB in every family. The later rungs lower RMSE further, to 1.8 dB for the boosted trees, and the margin by up to 1.4 dB more (the boosted trees reach 7.9 dB, the GRU 6.7 dB), in the tree ensembles and the ANN almost entirely through the same-channel history and the spreading factor. The GRU's lower margins come from the SF11 and SF12 packets of the validation blocks, where its 99% residual quantile at rung H4 is 12.8 dB against 14.5 to 17.5 dB for the other families; on SF7 to SF10 the families lie within 5.0 to 6.6 dB (`CV_Results/margin_by_sf_group_H4.csv`). At the last rung the boosted trees, the random forest, the ANN and the GRU end between 1.82 and 1.92 dB; kNN and the linear model are 0.4 to 0.6 dB behind. The GRU reads the last 30 packets as a sequence, with the windows that reach further back as static inputs and spreading factor and channel as indicators; it matches the engineered windows and does not improve on them.
 
 Fitted on five links and tested on the sixth (rung H4), against the same model fitted on the same blocks with the link included, the tree ensembles reach 2.02 to 2.06 dB on the unseen link, 0.01 dB above the model that saw the link; the ANN reaches 2.10 dB, kNN 2.28 dB, the GRU 2.00 dB and the linear model 2.40 dB, and the largest penalty in any family is 0.03 dB (the GRU). Coverage at the calibrated 99% margin is 99.7% on the unseen link (99.6% for the GRU).
 
@@ -123,14 +123,14 @@ A margin is an upper quantile forecast, so it is tested like one. The shift adde
 
 *Hold-out coverage by state with 95% intervals from resampling days (a), coverage in each test window (b) and the clustering of the misses on the hold-out (c), 99% target.*
 
-- **A single pooled shift drifts with the regime.** One margin from all earlier validation packets covers between 98.8 and 99.4% in the four validation windows and 99.85% on the hold-out, which has no SF11 or SF12 and is a summer window. In the validation windows its worst state is always SF12, covered at 93.7 to 94.5%, while every other spreading factor is covered at 99.5% or more.
+- **A single pooled shift drifts with the regime.** One margin from all earlier validation packets covers between 98.8 and 99.4% in the four validation windows and 99.85% on the hold-out, which holds practically no SF11 or SF12 (33 packets) and is a summer window. In the validation windows its worst state is always SF12, covered at 93.7 to 94.5%, while every other spreading factor is covered at 99.5% or more.
 - **Knowing the state is most of the gain.** A margin per group of spreading factor and working hours cuts the pinball loss from 87.6 to 65.3 per thousand, and the table of 36 margins to 63.0. The mean margin above the anchor falls from 7.9 to 4.7 dB, at a hold-out coverage of 99.15% instead of 99.85%.
 - **The quantile model is sharper than the table by about 6.5%.** Its pinball loss is 4.1 per thousand lower than that of the 36-cell table, with a 95% interval from 3.1 to 5.5. Its coverage in the volatile third is level with the table (difference 0.0 points, interval -0.2 to +0.1) and 0.8 points above the 12-cell table (interval +0.5 to +1.0). Conditional coverage therefore comes from knowing the state, by a table or by a model.
 - **Adaptive conformal inference holds the target in every window.** Coverage is 99.0% in all five windows for both base predictors, where the pooled shift moves between 98.8 and 99.85%. In validation fold 3, the window with the heaviest tail, it lowers the pinball loss of the quantile model by 32%, with an interval from 8% to 66%.
 - **Misses cluster less the more the margin knows.** The ratio is 62 for one regression margin and 2.3 for the quantile model with the adaptive shift, with an interval from 1.7 to 2.8, so no method reaches independence. A regression of the misses on the previous miss and the state rejects independence for every method with half a million packets, so the effect size matters: the chance of a miss across the states ranges from 0 to 15% with one regression margin and from 0.7 to 3.6% with the adaptive quantile margin, against a target of 1%.
 - **The other targets.** At the 95 and 90% targets the ordering is the same. The adaptive quantile model reaches 95.0 and 90.0% coverage on the hold-out with a mean margin of 2.9 and 2.2 dB, where one regression margin gives 97.3 and 92.2% with 3.5 and 2.5 dB.
 
-At one uplink every 10 minutes LightGBM on rung 2 reaches 2.3 dB RMSE and a 99% margin of 10.4 dB, against 2.7 dB and 11.9 dB for the mean of the previous 20 packets; at one uplink per hour it reaches 2.6 dB and 11.8 dB, against 3.2 dB and 13.1 dB.
+At one uplink every 10 minutes LightGBM on rung 2 reaches 2.3 dB RMSE and a 99% margin of 10.4 dB, against 2.7 dB and 11.9 dB for the mean of the previous 20 packets; at one uplink per hour it reaches 2.6 dB and 11.8 dB, against 3.2 dB and 13.1 dB for the 20-packet mean and 3.2 dB and 12.0 dB for the previous packet.
 
 ### Estimators from the adaptive data rate literature
 
@@ -151,7 +151,7 @@ Notebook 18 puts the estimators of adaptive data rate schemes on the same footin
 | best of the last 20 | 5.06 | 99.7% | 9.54 | 106.5 | +41.20 [+40.19, +42.26] |
 
 - **The learned history models beat every classical estimator.** The exponential average and the Kalman filter reach 2.62 dB, level with the mean of the last 20 packets, 2.63 dB, and close to the previous-hour mean, 2.71 dB. The LightGBM reaches 1.95 dB and the GRU 1.97 dB. Filtering is not what matters: the learned models gain from the longer windows, the same-channel history and the spreading factor, which the classical estimators do not use.
-- **The standard rule is the weakest.** The best of the last 20 packets selects the extreme and estimates the level with a 5.06 dB RMSE. A fixed 10 dB above it covers 96.7% at a 99% target; the same 10 dB above the mean of the last 20 packets covers 99.9%.
+- **The standard rule is the weakest.** The best of the last 20 packets selects the extreme and estimates the level with a 5.06 dB RMSE. A fixed 10 dB above it, 5.9 dB above the anchor on average, covers 96.7% at a 99% target; the same 10 dB above the mean of the last 20 packets covers 99.9%.
 
 ### What each group of inputs adds
 
@@ -171,9 +171,9 @@ Notebook 19 repeats the static benchmark with one LightGBM tuned separately on e
 
 *The difference to the per-link mean is the hold-out RMSE minus that of the mean of each link over the earlier training packets, with a 95% interval. Distance alone takes six values for six links, so it is a per-link constant.*
 
-- **Every subset with the geometry is within 0.25 dB of the per-link mean.** The whole range is as large as the noise of the tuning: repeating the search and the fits for the same inputs moves the hold-out RMSE by up to 0.12 dB. Distance alone, which is the per-link mean up to shrinkage, lands 0.09 dB below it, so differences of that size are not resolved.
-- **The environment adds nothing resolvable.** The full model minus geometry and channel is -0.03 dB, with an interval from -0.07 to +0.02. The sensors alone remove 6.5% of the variance around one mean for all links, where the link identity removes 90%.
-- **The SNR of the same packet, the predictor of the submitted manuscript, is worth 0.17 dB here.** Added to the benchmark it lowers the hold-out RMSE from 4.87 to 4.70 dB (-0.17 [-0.29, -0.04]) and the 99% shift from 18.45 to 18.29 dB. It is known only once the packet has been received, so it cannot enter a link budget; on the two public datasets the same leak is worth 0.6 dB.
+- **Every subset with the geometry, and without the SNR of the same packet, is within 0.25 dB of the per-link mean.** The whole range is as large as the noise of the tuning: repeating the search and the fits for the same inputs moves the hold-out RMSE by up to 0.12 dB. Distance alone, which is the per-link mean up to shrinkage, lands 0.09 dB below it, so differences of that size are not resolved.
+- **The environment adds at most about 0.2 dB, depending on what it joins.** Added to the geometry it lowers the hold-out RMSE from 4.99 to 4.79 dB; added to geometry and channel, by 0.03 dB, with an interval from -0.07 to +0.02. Both are of the order of the tuning noise. The sensors alone remove 6.5% of the variance around one mean for all links, where the training mean of each link removes 90%.
+- **The SNR of the same packet, the predictor of the submitted manuscript, is worth 0.17 dB here.** Added to the benchmark it lowers the hold-out RMSE from 4.87 to 4.70 dB (-0.17 [-0.29, -0.04]) and the 99% shift from 18.45 to 18.29 dB. Link by link it ranges from -0.79 dB on ED5, the weakest link, to +0.42 dB on ED0, where the added input makes the model worse; every office link operates at a median SNR of 8.2 to 10.5 dB (`CV_Results/static_snr_leak.csv`). It is known only once the packet has been received, so it cannot enter a link budget; on the public datasets the same leak is worth 0.64 dB (Medellín) and 0.53 dB (campus).
 - **The link's history is the step.** It lowers the RMSE by 2.32 to 2.74 dB in every family. Of the groups that follow, the same-channel history changes the hold-out RMSE by -0.25 to -0.05 dB over the families, the spreading factor by -0.53 to -0.01 dB and the SNR of earlier packets by -0.13 to -0.02 dB (negative: the added inputs help), while the clock, the sensors and the link level with the geometry change it by no more than 0.04 dB in any family (table below).
 
 | Step | Linear regression | Random forest | XGBoost | LightGBM | k-nearest neighbours | ANN (MLP) | GRU |
@@ -196,7 +196,7 @@ Notebook 20 runs the same procedure on the public urban measurements of Gonzále
 |---|---|---|
 | per-link mean | 2.47 | 5.7 |
 | previous hour mean | 1.62 | 3.9 |
-| static inputs | 2.12 | 5.6 |
+| static inputs | 2.12 | 5.5 |
 | static inputs + SNR of the same packet | 1.48 | 4.0 |
 | rung H1 | 1.54 | 3.7 |
 | rung H4 | 1.33 | 3.0 |
@@ -205,32 +205,32 @@ Notebook 20 runs the same procedure on the public urban measurements of Gonzále
 
 The figure of the next section draws this ladder next to the office's and the campus data's.
 
-- **The ladder replicates.** The margin falls to 52 to 53% of the static margin from rung H4 on, against 43% for the same model in the office, and the later rungs add little.
-- **The SNR of the same packet buys what history buys.** Added to the static inputs it lowers the RMSE from 2.12 to 1.48 dB, close to the 1.54 dB of the link's own history. This is the gain of the published models, and it is leakage: the SNR of a packet is not known before the packet is received.
+- **The ladder replicates.** The margin falls to 50 to 52% of the per-link mean's margin from rung H4 on, against 43% for the same model in the office, and the later rungs add little.
+- **The SNR of the same packet buys what history buys.** Added to the static inputs, with the static model tuned anew for that input set, it lowers the RMSE from 2.12 to 1.48 dB (-0.64 [-0.73, -0.56]), close to the 1.54 dB of the link's own history and below the 1.57 dB published for the environment-aware models on these data. The gain sits on the two links that operate below 0 dB median SNR, where the path loss changes by 1.0 and 1.1 dB per dB of SNR (-0.89 and -1.15 dB), and is -0.05 dB on the link at 7 dB median SNR. It is leakage: the SNR of a packet is not known before the packet is received (`CV_Results/medellin_snr_leak.csv`).
 - **The refinements of the calibration matter less there.** The data hold one regime, spreading factors 7 to 10 throughout, and the quantile model lowers the pinball loss by 1 to 2%.
 
-**A link the model has never seen.** As in the office (notebook 13), the model is fitted on three links, its 99% margin calibrated on their later packets, and both are tested on the fourth link's hold-out; the margin is either kept as calibrated or adapted to the link's own misses as they occur (adaptive conformal inference).
+**A link the model has never seen.** As in the office (notebook 13), the model is fitted on validation blocks 0 to 3 of three links, its 99% margin calibrated on their block 4, and both are tested on the fourth link's hold-out, against the same model fitted on blocks 0 to 3 of all four links; the margin is either kept as calibrated or adapted to the link's own misses as they occur (adaptive conformal inference).
 
-| Link | Static inputs, unseen | Rung H1, unseen / in training | Rung H4, unseen / in training | 99% coverage at rung H4, fixed / adaptive |
+| Link | Static inputs, unseen / in training | Rung H1, unseen / in training | Rung H4, unseen / in training | 99% coverage at rung H4, fixed / adaptive |
 |---|---|---|---|---|
-| EN1 | 7.34 | 1.77 / 1.71 | 1.67 / 1.46 | 96.3 / 99.0% |
-| EN2 (673 hold-out packets) | 4.37 | 1.60 / 1.58 | 1.35 / 1.23 | 98.4 / 98.7% |
-| EN3 (SF10 only) | 5.74 | 1.61 / 1.57 | 1.67 / 1.36 | 89.5 / 99.0% |
-| EN4 | 9.17 | 1.33 / 1.31 | 1.22 / 1.15 | 98.9 / 99.0% |
+| EN1 | 7.30 / 2.25 | 1.77 / 1.71 | 1.67 / 1.46 | 96.3 / 99.0% |
+| EN2 (673 hold-out packets) | 4.46 / 1.64 | 1.60 / 1.58 | 1.35 / 1.23 | 98.4 / 98.7% |
+| EN3 (SF10 only) | 6.02 / 2.14 | 1.61 / 1.57 | 1.67 / 1.36 | 89.5 / 99.0% |
+| EN4 | 8.21 / 2.14 | 1.33 / 1.31 | 1.22 / 1.15 | 98.9 / 99.0% |
 
-*Hold-out RMSE in dB. The static model fitted on three links misses the fourth by 4.4 to 9.2 dB, with biases of -6.7 to +8.9 dB: distance does not carry the level of a link the model has not seen. With link history the same fit lands within 0.02 to 0.06 dB (rung H1) and 0.08 to 0.31 dB (rung H4) of the fit that included the link. The margin calibrated on the other links covers 96 to 99% of the unseen link's packets, except on EN3 at rung H4 (89.5%): EN3 transmits at SF10 only, the other three cycle through SF7 to SF10, and on them SF10 packets read 0.2 to 1.0 dB below the previous-hour mean, so the model carries an SF10 offset that EN3's own anchor already contains. The adaptive shift restores 99.0% on EN3 with a 4.4 dB margin, and 98.2 to 99.0% on every link.*
+*Hold-out RMSE in dB. The static model fitted on three links misses the fourth by 4.5 to 8.2 dB, with biases of -6.7 to +7.9 dB, against 1.6 to 2.2 dB with the link in training: distance does not carry the level of a link the model has not seen. With link history the same fit lands within 0.02 to 0.06 dB (rung H1) and 0.08 to 0.30 dB (rung H4) of the fit that included the link. The margin calibrated on the other links covers 96.3 to 98.9% of the unseen link's packets at rung H4, except on EN3 (89.5%): EN3 transmits at SF10 only while the other three cycle through SF7 to SF10, so the model carries an SF10 offset learned on the other links that EN3's own anchor already contains (bias +0.7 dB). The adaptive shift restores 99.0% on EN3 with a 4.4 dB margin, and 98.7 to 99.0% on every link at rung H4.*
 
 ### The ladder and the margins under drift: a second public dataset
 
-Notebook 22 repeats the ladder and the margin comparison on the long-term LoRaWAN metadata of the University of Virginia campus ([Nikseresht, Sobral, Goodall and Campbell, BuildSys 2025](https://doi.org/10.1145/3736425.3771960); [data](https://doi.org/10.18130/V3/RFTICK), CC BY 4.0): ten sensors, six of them indoors in offices, a laboratory and a classroom, three gateways, one of them indoors, 9 February 2024 to 11 June 2025, one uplink every five minutes, 2.09 million receptions. The 22 sensor-gateway links with at least 5,000 receptions are kept; link 10C starts inside the hold-out and is never in training. Every sensor transmits at spreading factor 7 throughout, so there is no spreading-factor regime; what the data have instead is drift: the monthly mean RSSI of the links to the rooftop gateway moves by up to 18 dB over the year, in step across the sensors. The transmit power is not recorded, so the models work on the negative RSSI, the path loss up to a constant per link; the environmental inputs are the campus weather station's temperature, humidity, pressure, wind and rain. Same split, folds, features and tuning as before; hold-out from 26 February 2025.
+Notebook 22 repeats the ladder and the margin comparison on the long-term LoRaWAN metadata of the University of Virginia campus ([Nikseresht, Sobral, Goodall and Campbell, BuildSys 2025](https://doi.org/10.1145/3736425.3771960); [data](https://doi.org/10.18130/V3/RFTICK), CC BY 4.0): ten sensors, six of them indoors in offices, a laboratory and a classroom, three gateways, one of them indoors, 9 February 2024 to 11 June 2025, one uplink every five minutes, 2.09 million receptions. The 22 sensor-gateway links with at least 5,000 receptions are kept; link 10C starts inside the hold-out and is never in training. Every sensor transmits at spreading factor 7 throughout, so there is no spreading-factor regime; what the data have instead is drift: over the 17 months the monthly mean RSSI of a link to one of the two rooftop gateways moves over 15 to 22 dB, largely in step with the other links of that gateway, and that of the links to the indoor gateway over 5 to 22 dB (`CV_Results/uva_monthly_drift.csv`). The transmit power is not recorded, so the models work on the negative RSSI, the path loss up to a constant per link; the environmental inputs are the campus weather station's temperature, humidity, pressure, wind and rain. Same split, folds, features and tuning as before; hold-out from 26 February 2025.
 
 | Inputs | Hold-out RMSE, dB | 99% margin, dB | Coverage |
 |---|---|---|---|
 | per-link mean | 6.94 [6.64, 7.25] | 14.5 | 97.3% |
 | previous hour mean | 3.33 [3.25, 3.41] | 10.0 | 99.1% |
 | static inputs without the weather | 6.81 [6.50, 7.12] | 14.7 | 97.9% |
-| static inputs | 5.84 [5.44, 6.27] | 23.8 | 99.7% |
-| static inputs + SNR of the same packet | 5.23 [4.88, 5.65] | 22.6 | 99.9% |
+| static inputs | 5.83 [5.46, 6.24] | 22.5 | 99.7% |
+| static inputs + SNR of the same packet | 5.30 [4.97, 5.70] | 19.6 | 99.9% |
 | rung H1 | 3.17 [3.11, 3.23] | 9.4 | 99.0% |
 | rung H4 | 2.77 [2.72, 2.83] | 7.7 | 98.8% |
 | rung H6 | 2.74 [2.68, 2.79] | 7.8 | 98.9% |
@@ -240,11 +240,11 @@ Notebook 22 repeats the ladder and the margin comparison on the long-term LoRaWA
 
 ![The ladder on the office data and on the two public datasets](docs/assets/ladder-three-datasets.png)
 
-*Hold-out RMSE (a) and 99% margin (b), both relative to the per-link mean of each dataset, for the office, the Medellín data and the campus data; open markers: the static inputs with the SNR of the same packet. All three ladders use the same margin, the single shift from the out-of-fold errors of the validation blocks.*
+*Hold-out RMSE (a) and 99% margin (b), both relative to the per-link mean of each dataset, for the office, the Medellín data and the campus data. All three ladders use the same margin, the single shift from the out-of-fold errors of the validation blocks.*
 
 - **The ladder replicates a third time.** With link history, channel, clock and spreading factor the hold-out RMSE is 40% of the per-link mean's (39% in the office, 54% in Medellín) and the 99% margin 53% of the per-link mean's margin (52% in Medellín, 43% in the office, where the seven families span 38 to 54%). The later rungs add 0.05 dB.
 - **A fixed level does not hold under drift.** The per-link mean's margin, calibrated on the validation year, covers 97.3% of the hold-out; the previous-hour mean and the history rungs 98.8 to 99.1%.
-- **The weather carries the season here, once the training data span it.** The static model reaches 5.84 dB with the weather against 6.81 dB without it: the level of the links to the rooftop gateway moves with the season and the station records that. Its 24 dB margin comes from the first two validation blocks, where weather terms fitted on two to five months were applied to the months that followed (tails of 28 and 22 dB, 13 to 14 dB from the third block on); without the weather the static tail equals the per-link mean's. The SNR of the same packet lowers the static RMSE to 5.23 dB, leakage as in Medellín, and does not reach the link's history (3.17 dB).
+- **The weather carries the season here, once the training data span it.** The static model reaches 5.83 dB with the weather against 6.81 dB without it: the level of the links to the rooftop gateways moves with the season and the station records that. Its 22.5 dB margin comes from the first two validation blocks, where weather terms fitted on two to five months were applied to the months that followed (tails of 27.2 and 20.6 dB, 12.2 to 12.8 dB from the third block on); without the weather the static tail equals the per-link mean's. The SNR of the same packet, with the static model tuned anew, lowers the static RMSE to 5.30 dB (-0.53 [-0.66, -0.42]), from -1.74 to +0.20 dB between the links, leakage as in Medellín, and does not reach the link's history (3.17 dB).
 
 | Margin on rung H4 | Coverage, validation windows 1 to 4 | Hold-out | Working hours | Volatile third | Gateway A | Worst link | Mean margin, dB | Pinball loss x 1000 |
 |---|---|---|---|---|---|---|---|---|
@@ -256,8 +256,8 @@ Notebook 22 repeats the ladder and the margin comparison on the long-term LoRaWA
 
 *Coverage at the 99% target; the worst link is the lowest coverage among the links with at least 1,000 hold-out packets; margin and pinball loss on the hold-out.*
 
-- **Margins under drift.** The regression with one shift covers 98.8% overall but 95.8% on its worst link and 96.9% in the volatile third, and over-covers the links to the indoor gateway (99.9%); in the validation windows its worst link is at 95.3%. The quantile model with one shift lowers the pinball loss by 30% against it and by 9% against the shift per state (-7.1 [-7.5, -6.7] per thousand); the adaptive shift takes 2% more (-1.5 [-1.9, -1.2]) and brings every link to 99.0 to 99.3%, the worst link of a validation window to 98.9%. The recency-weighted shift changes nothing (+0.07 [-0.00, +0.15]): the quantile model's inputs already follow the drift, the calibration scores need not. After a miss the next packet misses 4.8 times [4.0, 5.8] as often as after a covered packet with the one-shift regression and 2.0 times [1.5, 2.5] with the quantile model.
-- **A sensor the model has never seen.** Fitted on the other nine sensors, the history models land within 0.03 dB (rung H1) and within -0.01 to +0.08 dB (rung H4) of the fit that included the sensor, on all 21 links; the new link 10C gets 2.23 dB at rung H1 and 1.80 dB at rung H4. The static model misses the held-out sensor's links by 3.0 to 24.5 dB. The fixed margin from the other sensors covers 96.1 to 100.0% per link at rung H4, the adaptive shift 98.9 to 100.0% (the table for every link is in notebook 22, written to `CV_Results/uva_unseen_sensor.csv`).
+- **Margins under drift.** The regression with one shift covers 98.8% overall but 95.8% on its worst link and 96.9% in the volatile third, and over-covers the links to the indoor gateway (99.9%); in the validation windows its worst link is at 95.2%. The quantile model with one shift lowers the pinball loss by 29% against it and by 7% against the shift per state (-5.8 [-6.3, -5.4] per thousand); the adaptive shift takes 2% more (-1.5 [-1.8, -1.2]) and brings every link to 99.0 to 99.4%, the worst link of a validation window to 98.9%. The recency-weighted shift changes nothing (+0.00 [-0.11, +0.12]): the quantile model's inputs already follow the drift, the calibration scores need not. After a miss the next packet misses 5.2 times [4.4, 6.3] as often as after a covered packet with the one-shift regression and 2.5 times [1.7, 3.4] with the quantile model and the adaptive shift.
+- **A sensor the model has never seen.** Fitted on blocks 0 to 3 of the other nine sensors, the history models land within 0.02 dB (rung H1) and 0.05 dB (rung H4) of the same fit with the sensor included, on all 21 links; the new link 10C gets 2.23 dB at rung H1 and 1.80 dB at rung H4. The static model misses the held-out sensor's links by 3.1 to 25.7 dB. The fixed margin from the other sensors covers 96.0 to 100.0% per link at rung H4, the adaptive shift 98.9 to 100.0% (the table for every link is in notebook 22, written to `CV_Results/uva_unseen_sensor.csv`).
 
 ## Model scope
 
@@ -348,9 +348,9 @@ The full benchmark is compute-intensive. Approximate wall-clock times on a works
 | `17_Margin_Calibration` | 14 min |
 | `18_ADR_Estimators` | 1 min |
 | `19_Feature_Groups` | 14 min |
-| `20_Medellin_Ladder` | 6 min |
+| `20_Medellin_Ladder` | 7 min |
 | `21_Error_Metrics` | 40 s |
-| `22_UVA_Ladder` | 17 min |
+| `22_UVA_Ladder` | 19 min |
 | `23_Paper_Tables` | 10 s |
 
 The other notebooks take minutes. Executed result cells document the reported runs, but generated search tables, data, models, residuals, and bulk analysis figures are intentionally excluded from version control and must be regenerated for a clean reproduction; the curated figures above are retained. Several notebook figures request Times New Roman and fall back to an installed font when it is unavailable.
