@@ -19,7 +19,12 @@ history (rungs H1 to H7): ANN (multilayer perceptron) & hidden layers [32, 16], 
 history (rungs H1 to H7): k-nearest neighbours & metric manhattan, n\_neighbors 45, weights distance \\
 history (rungs H1 to H7): GRU & units 64, sequence length 30, width screen 16: 2.708; 32: 2.685; 64: 2.677; 128: 2.702, final ensemble 3 seeds \\
 public data, Medellín: LightGBM & colsample\_bytree 0.6172, learning\_rate 0.01128, min\_child\_samples 5, n\_estimators 1245, num\_leaves 42, reg\_lambda 24.67, subsample 0.7633 \\
+public data, Medellín: LightGBM, static inputs & colsample\_bytree 0.8691, learning\_rate 0.02807, min\_child\_samples 55, n\_estimators 649, num\_leaves 27, reg\_lambda 0.2024, subsample 0.9735 \\
+public data, Medellín: LightGBM, static inputs + SNR of the same packet & colsample\_bytree 0.569, learning\_rate 0.01, min\_child\_samples 5, n\_estimators 1500, num\_leaves 27, reg\_lambda 30, subsample 0.6 \\
 public data, campus: LightGBM & colsample\_bytree 0.944, learning\_rate 0.01046, min\_child\_samples 5, n\_estimators 719, num\_leaves 255, reg\_lambda 0.3134, subsample 0.8366 \\
+public data, campus: LightGBM, static inputs without the weather & colsample\_bytree 0.5055, learning\_rate 0.02148, min\_child\_samples 12, n\_estimators 545, num\_leaves 229, reg\_lambda 28.41, subsample 0.9293 \\
+public data, campus: LightGBM, static inputs & colsample\_bytree 0.7574, learning\_rate 0.01, min\_child\_samples 259, n\_estimators 418, num\_leaves 255, reg\_lambda 15.85, subsample 0.7217 \\
+public data, campus: LightGBM, static inputs + SNR of the same packet & colsample\_bytree 0.5, learning\_rate 0.01, min\_child\_samples 5, n\_estimators 529, num\_leaves 255, reg\_lambda 0.1, subsample 0.6 \\
 \bottomrule
 \end{tabular}
 \end{table}
