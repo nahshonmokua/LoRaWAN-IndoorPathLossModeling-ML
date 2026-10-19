@@ -11,13 +11,12 @@ static: Random forest & n\_estimators 358, max\_depth 3, min\_samples\_split 176
 static: XGBoost & n\_estimators 397, max\_depth 1, learning\_rate 0.02231, min\_child\_weight 54.35, gamma 3.929, subsample 0.6781, colsample\_bytree 0.933, reg\_alpha 0.0001, reg\_lambda 20 \\
 static: LightGBM & n\_estimators 440, num\_leaves 95, max\_depth 1, learning\_rate 0.02033, min\_child\_samples 3031, min\_child\_weight 30, subsample 0.7802, colsample\_bytree 0.5963, reg\_alpha 500, reg\_lambda 0.003914 \\
 static: k-nearest neighbours & n\_neighbors 30677, weights distance, metric manhattan, scaler StandardScaler, power transform none \\
-static: ANN (multilayer perceptron) & hidden layers [20, 10], L2 0.0001, dropout 0, learning rate 0.001, parameters 511, final ensemble 30 seeds \\
+static: ANN (multilayer perceptron) & hidden layers [12, 6], L2 0.0001, dropout 0.1, learning rate 0.001, parameters 259, final ensemble 30 seeds \\
 history (rungs H1 to H7): Random forest & max\_depth 27, max\_features 0.565, max\_samples 1, min\_samples\_leaf 5 \\
 history (rungs H1 to H7): XGBoost & colsample\_bytree 0.7659, learning\_rate 0.01754, max\_depth 9, min\_child\_weight 205.7, n\_estimators 1216, reg\_lambda 0.863, subsample 0.8023 \\
 history (rungs H1 to H7): LightGBM & colsample\_bytree 0.9062, learning\_rate 0.01673, min\_child\_samples 606, n\_estimators 1244, num\_leaves 141, reg\_lambda 0.1724, subsample 0.9023 \\
 history (rungs H1 to H7): ANN (multilayer perceptron) & hidden layers [32, 16], final ensemble 3 seeds \\
 history (rungs H1 to H7): k-nearest neighbours & metric manhattan, n\_neighbors 45, weights distance \\
-history (rungs H1 to H7): GRU & units 64, sequence length 30, width screen 16: 2.708; 32: 2.685; 64: 2.677; 128: 2.702, final ensemble 3 seeds \\
 public data, Medellín: LightGBM & colsample\_bytree 0.6172, learning\_rate 0.01128, min\_child\_samples 5, n\_estimators 1245, num\_leaves 42, reg\_lambda 24.67, subsample 0.7633 \\
 public data, Medellín: LightGBM, static inputs & colsample\_bytree 0.8691, learning\_rate 0.02807, min\_child\_samples 55, n\_estimators 649, num\_leaves 27, reg\_lambda 0.2024, subsample 0.9735 \\
 public data, Medellín: LightGBM, static inputs + SNR of the same packet & colsample\_bytree 0.569, learning\_rate 0.01, min\_child\_samples 5, n\_estimators 1500, num\_leaves 27, reg\_lambda 30, subsample 0.6 \\
