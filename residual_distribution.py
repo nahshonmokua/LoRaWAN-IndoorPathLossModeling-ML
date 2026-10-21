@@ -8,7 +8,8 @@ random means, and every split of the best fit with one component fewer, so the l
 of components K grows; no component is narrower than the spread of the dequantisation. select_mixture() chooses K by
 cross-validation over the time blocks of the out-of-fold residuals (fit on all blocks but one, score the left-out block):
 the smallest K whose held-out log-likelihood is within one standard error of the best, the standard error from the
-per-block differences. BIC is reported for comparison; with millions of autocorrelated residuals it keeps falling as K grows.
+per-block differences; the range of K must reach past the best (checked). BIC is reported for comparison; with millions of
+autocorrelated residuals it keeps falling as K grows.
 
 block_rows() chooses the block length of the moving-block bootstrap of a quantile. The quantile's uncertainty depends on
 the exceedance indicator 1{r > Q_{1-p}}, whose variance over calendar blocks, times the block length, grows with the
@@ -151,6 +152,7 @@ def select_mixture(x, blocks, k_max=8, seed=42, tol=1e-9, n_jobs=-1):
         "loss to best": loss.mean(axis=1),
         "loss SE": loss.std(axis=1, ddof=1) / np.sqrt(heldout.shape[1]),
     }, index=heldout.index)
+    assert table["held-out log-likelihood"].idxmax() < k_max, f"the held-out log-likelihood is largest at k_max = {k_max}: raise k_max"
     k_sel = int(table.index[table["loss to best"] <= table["loss SE"]].min())
     table["selected"] = table.index == k_sel
     return mixtures, table, k_sel
