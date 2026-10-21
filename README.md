@@ -10,7 +10,7 @@
 
 This study compares analytical and empirical indoor propagation laws, linear models, tree ensembles, nearest-neighbour regression and neural networks on a later period of LoRaWAN path loss measurements. It then uses out-of-fold errors to estimate fade margins at specified residual-coverage targets, and asks how those margins depend on what the predictor knows: geometry and environmental sensors only, or also the link's own earlier packets.
 
-RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 17.9 to 19.5 dB for every learned model and the calibrated COST 231 multi-wall model, although held-out RMSE ranges from 4.6 to 6.4 dB. With the link's earlier packets it falls to 6.7 to 9.9 dB when calibrated on the whole year, which includes SF11 and SF12 rows that the hold-out lacks. A margin that also conditions on the spreading factor and the state of the link needs 4 to 5 dB on the hold-out. Notebooks 17 to 22 test the margins as quantile forecasts, compare the history models with the estimators of adaptive data rate schemes, measure what each group of inputs adds, repeat the ladder on two public datasets, and report the mean absolute error and the correlation within each link.
+RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 17.9 to 19.5 dB for every learned model and the calibrated COST 231 multi-wall model, although held-out RMSE ranges from 4.6 to 6.4 dB. With the link's earlier packets it falls to 6.7 to 9.9 dB when calibrated on the whole year, which includes SF11 and SF12 rows that the hold-out lacks. A margin that also conditions on the spreading factor and the state of the link needs 4 to 5 dB on the hold-out. Notebooks 16 to 21 test the margins as quantile forecasts, compare the history models with the estimators of adaptive data rate schemes, measure what each group of inputs adds, repeat the ladder on two public datasets, and report the mean absolute error and the correlation within each link.
 
 ## Experimental design
 
@@ -78,7 +78,7 @@ Fitted on five links and tested on the sixth (rung H4), against the same model f
 
 ### Mean absolute error and correlation
 
-Notebook 21 adds the mean absolute error and the Pearson correlation between measurement and prediction, on the 531,983 hold-out packets that every model predicts, with 95% intervals from resampling days. The correlation is given twice: over all links, and within each link, after removing the mean of the link from the measurement and from the prediction, which measures whether a model follows the variation of a link in time.
+Notebook 20 adds the mean absolute error and the Pearson correlation between measurement and prediction, on the 531,983 hold-out packets that every model predicts, with 95% intervals from resampling days. The correlation is given twice: over all links, and within each link, after removing the mean of the link from the measurement and from the prediction, which measures whether a model follows the variation of a link in time.
 
 | Model | MAE | RMSE | Bias | R² | r, all links | r, within link |
 |---|---|---|---|---|---|---|
@@ -103,7 +103,7 @@ Notebook 21 adds the mean absolute error and the Pearson correlation between mea
 
 ### Calibrating and validating the margins
 
-A margin is an upper quantile forecast, so it is tested like one. The shift added to a base predictor comes only from earlier packets, the score is the pinball loss, coverage is checked by state and not only overall, and the misses are tested for independence. Notebook 17 builds the margin on rung 2 with a LightGBM regression and with LightGBM quantile models, calibrates it five ways, and tests each on five windows: validation folds 1 to 4 and the hold-out, each calibrated on the folds before it. Hold-out, 99% target:
+A margin is an upper quantile forecast, so it is tested like one. The shift added to a base predictor comes only from earlier packets, the score is the pinball loss, coverage is checked by state and not only overall, and the misses are tested for independence. Notebook 16 builds the margin on rung 2 with a LightGBM regression and with LightGBM quantile models, calibrates it five ways, and tests each on five windows: validation folds 1 to 4 and the hold-out, each calibrated on the folds before it. Hold-out, 99% target:
 
 | Margin | Coverage | Lowest state coverage | Mean margin, dB | Pinball loss x 1000 | Miss clustering |
 |---|---|---|---|---|---|
@@ -132,7 +132,7 @@ At one uplink every 10 minutes LightGBM on rung 2 reaches 2.3 dB RMSE and a 99% 
 
 ### Estimators from the adaptive data rate literature
 
-Notebook 18 puts the estimators of adaptive data rate schemes on the same footing as the learned history models: the previous packet, the mean, the median, the exponential average, a Kalman filter and the linear-regression extrapolation of the last 20 packets, and the best of the last 20 packets that the standard rule uses. The tuned ones are tuned on the validation folds. The margin is one shift per group of spreading factor and working hours, calibrated on the validation folds. Hold-out, 99% target, with the difference to the LightGBM in pinball loss and its 95% interval:
+Notebook 17 puts the estimators of adaptive data rate schemes on the same footing as the learned history models: the previous packet, the mean, the median, the exponential average, a Kalman filter and the linear-regression extrapolation of the last 20 packets, and the best of the last 20 packets that the standard rule uses. The tuned ones are tuned on the validation folds. The margin is one shift per group of spreading factor and working hours, calibrated on the validation folds. Hold-out, 99% target, with the difference to the LightGBM in pinball loss and its 95% interval:
 
 | Estimator of the current path loss | RMSE, dB | Coverage | Mean margin, dB | Pinball loss x 1000 | Difference to LightGBM |
 |---|---|---|---|---|---|
@@ -152,7 +152,7 @@ Notebook 18 puts the estimators of adaptive data rate schemes on the same footin
 
 ### What each group of inputs adds
 
-Notebook 19 repeats the static benchmark with one LightGBM tuned separately on every subset of the nine inputs, and measures every step of the history rungs with paired intervals from resampling days. The static inputs, hold-out:
+Notebook 18 repeats the static benchmark with one LightGBM tuned separately on every subset of the nine inputs, and measures every step of the history rungs with paired intervals from resampling days. The static inputs, hold-out:
 
 | Inputs | Hold-out RMSE, dB | Difference to the per-link mean |
 |---|---|---|
@@ -187,7 +187,7 @@ Notebook 19 repeats the static benchmark with one LightGBM tuned separately on e
 
 ### The same ladder on an independent public dataset
 
-Notebook 20 runs the same procedure on the public urban measurements of González-Palacio et al. ([data descriptor](https://doi.org/10.3390/data8010004)): four fixed end nodes in Medellín, 930,753 uplinks over six months, with the same chronological split and the same rungs, the sensors of that dataset in place of ours. LightGBM, hold-out:
+Notebook 19 runs the same procedure on the public urban measurements of González-Palacio et al. ([data descriptor](https://doi.org/10.3390/data8010004)): four fixed end nodes in Medellín, 930,753 uplinks over six months, with the same chronological split and the same rungs, the sensors of that dataset in place of ours. LightGBM, hold-out:
 
 | Inputs | Hold-out RMSE, dB | 99% margin, dB |
 |---|---|---|
@@ -219,7 +219,7 @@ The figure of the next section draws this ladder next to the office's and the ca
 
 ### The ladder and the margins under drift: a second public dataset
 
-Notebook 22 repeats the ladder and the margin comparison on the long-term LoRaWAN metadata of the University of Virginia campus ([Nikseresht, Sobral, Goodall and Campbell, BuildSys 2025](https://doi.org/10.1145/3736425.3771960); [data](https://doi.org/10.18130/V3/RFTICK), CC BY 4.0): ten sensors, six of them indoors in offices, a laboratory and a classroom, three gateways, one of them indoors, 9 February 2024 to 11 June 2025, one uplink every five minutes, 2.09 million receptions. The 22 sensor-gateway links with at least 5,000 receptions are kept; link 10C starts inside the hold-out and is never in training. Every sensor transmits at spreading factor 7 throughout, so there is no spreading-factor regime; what the data have instead is drift: over the 17 months the monthly mean RSSI of a link observed for a year or more moves over 15 to 22 dB at the two rooftop gateways, largely in step with the other links of that gateway, and over 5 to 22 dB at the indoor gateway (`CV_Results/uva_monthly_drift.csv`). The transmit power is not recorded, so the models work on the negative RSSI, the path loss up to a constant per link; the environmental inputs are the campus weather station's temperature, humidity, pressure, wind and rain. Same split, folds, features and tuning as before; hold-out from 26 February 2025.
+Notebook 21 repeats the ladder and the margin comparison on the long-term LoRaWAN metadata of the University of Virginia campus ([Nikseresht, Sobral, Goodall and Campbell, BuildSys 2025](https://doi.org/10.1145/3736425.3771960); [data](https://doi.org/10.18130/V3/RFTICK), CC BY 4.0): ten sensors, six of them indoors in offices, a laboratory and a classroom, three gateways, one of them indoors, 9 February 2024 to 11 June 2025, one uplink every five minutes, 2.09 million receptions. The 22 sensor-gateway links with at least 5,000 receptions are kept; link 10C starts inside the hold-out and is never in training. Every sensor transmits at spreading factor 7 throughout, so there is no spreading-factor regime; what the data have instead is drift: over the 17 months the monthly mean RSSI of a link observed for a year or more moves over 15 to 22 dB at the two rooftop gateways, largely in step with the other links of that gateway, and over 5 to 22 dB at the indoor gateway (`CV_Results/uva_monthly_drift.csv`). The transmit power is not recorded, so the models work on the negative RSSI, the path loss up to a constant per link; the environmental inputs are the campus weather station's temperature, humidity, pressure, wind and rain. Same split, folds, features and tuning as before; hold-out from 26 February 2025.
 
 | Inputs | Hold-out RMSE, dB | 99% margin, dB | Coverage |
 |---|---|---|---|
@@ -254,7 +254,7 @@ Notebook 22 repeats the ladder and the margin comparison on the long-term LoRaWA
 *Coverage at the 99% target; the worst link is the lowest coverage among the links with at least 1,000 hold-out packets; margin and pinball loss on the hold-out.*
 
 - **Margins under drift.** The regression with one shift covers 98.8% overall but 95.8% on its worst link and 96.9% in the volatile third, and over-covers the links to the indoor gateway (99.9%); in the validation windows its worst link is at 95.2%. The quantile model with one shift lowers the pinball loss by 29% against it and by 7% against the shift per state (-5.8 [-6.3, -5.4] per thousand); the adaptive shift takes 2% more (-1.5 [-1.8, -1.2]) and brings every link to 99.0 to 99.4%, the worst link of a validation window to 98.9%. The recency-weighted shift changes nothing (+0.00 [-0.11, +0.12]): the quantile model's inputs already follow the drift, the calibration scores need not. After a miss the next packet misses 5.2 times [4.4, 6.3] as often as after a covered packet with the one-shift regression and 2.5 times [1.7, 3.4] with the quantile model and the adaptive shift.
-- **A sensor the model has never seen.** Fitted on blocks 0 to 3 of the other nine sensors, the history models land within 0.02 dB (rung H1) and 0.05 dB (rung H4) of the same fit with the sensor included, on all 21 links; the new link 10C gets 2.23 dB at rung H1 and 1.80 dB at rung H4. The static model misses the held-out sensor's links by 3.1 to 25.7 dB. The fixed margin from the other sensors covers 96.0 to 100.0% per link at rung H4, the adaptive shift 98.9 to 100.0% (the table for every link is in notebook 22, written to `CV_Results/uva_unseen_sensor.csv`).
+- **A sensor the model has never seen.** Fitted on blocks 0 to 3 of the other nine sensors, the history models land within 0.02 dB (rung H1) and 0.05 dB (rung H4) of the same fit with the sensor included, on all 21 links; the new link 10C gets 2.23 dB at rung H1 and 1.80 dB at rung H4. The static model misses the held-out sensor's links by 3.1 to 25.7 dB. The fixed margin from the other sensors covers 96.0 to 100.0% per link at rung H4, the adaptive shift 98.9 to 100.0% (the table for every link is in notebook 21, written to `CV_Results/uva_unseen_sensor.csv`).
 
 ## Model scope
 
@@ -316,14 +316,14 @@ Run the numbered notebooks from the repository root. Their order is the dependen
 | Synthesis | [`10_General_Comparisons.ipynb`](10_General_Comparisons.ipynb), [`11_Bootstrap_Model_Comparison.ipynb`](11_Bootstrap_Model_Comparison.ipynb) | Cross-model figures and paired uncertainty estimates |
 | Link history | [`12_History_Features.ipynb`](12_History_Features.ipynb), [`history_features.py`](history_features.py) | Causal link-history inputs for the rungs |
 | History models | `13_History_Models.ipynb` (linear, random forest, XGBoost, LightGBM, ANN), `14_History_kNN.ipynb` | Residuals per family and rung, unseen-link test, static models on an unseen link |
-| Information tables | [`16_Information_by_Family.ipynb`](16_Information_by_Family.ipynb) | Rung by family tables and figure, quantile margins, sparse uplinks |
-| Margin validation | [`17_Margin_Calibration.ipynb`](17_Margin_Calibration.ipynb), [`margin_tools.py`](margin_tools.py) | Calibrations on rolling origins, coverage by state, independence of the misses |
-| Estimator baselines | [`18_ADR_Estimators.ipynb`](18_ADR_Estimators.ipynb) | The estimators of adaptive data rate schemes against the history models |
-| Input groups | [`19_Feature_Groups.ipynb`](19_Feature_Groups.ipynb) | Ablation of the static inputs and the steps of the history rungs, with intervals |
-| Public dataset | [`20_Medellin_Ladder.ipynb`](20_Medellin_Ladder.ipynb) | The ladder on the public urban measurements |
-| Error metrics | [`21_Error_Metrics.ipynb`](21_Error_Metrics.ipynb) | MAE, bias and Pearson correlation, pooled and within link, for every model |
-| Second public dataset | [`22_UVA_Ladder.ipynb`](22_UVA_Ladder.ipynb) | The ladder, the margins under drift and the unseen-sensor test on the campus metadata |
-| Manuscript tables | [`23_Paper_Tables.ipynb`](23_Paper_Tables.ipynb) | Dataset by device, spreading-factor schedule, selected hyperparameters and software versions, as CSV and LaTeX (`Tables/`) |
+| Information tables | [`15_Information_by_Family.ipynb`](15_Information_by_Family.ipynb) | Rung by family tables and figure, quantile margins, sparse uplinks |
+| Margin validation | [`16_Margin_Calibration.ipynb`](16_Margin_Calibration.ipynb), [`margin_tools.py`](margin_tools.py) | Calibrations on rolling origins, coverage by state, independence of the misses |
+| Estimator baselines | [`17_ADR_Estimators.ipynb`](17_ADR_Estimators.ipynb) | The estimators of adaptive data rate schemes against the history models |
+| Input groups | [`18_Feature_Groups.ipynb`](18_Feature_Groups.ipynb) | Ablation of the static inputs and the steps of the history rungs, with intervals |
+| Public dataset | [`19_Medellin_Ladder.ipynb`](19_Medellin_Ladder.ipynb) | The ladder on the public urban measurements |
+| Error metrics | [`20_Error_Metrics.ipynb`](20_Error_Metrics.ipynb) | MAE, bias and Pearson correlation, pooled and within link, for every model |
+| Second public dataset | [`21_UVA_Ladder.ipynb`](21_UVA_Ladder.ipynb) | The ladder, the margins under drift and the unseen-sensor test on the campus metadata |
+| Manuscript tables | [`22_Paper_Tables.ipynb`](22_Paper_Tables.ipynb) | Dataset by device, spreading-factor schedule, selected hyperparameters and software versions, as CSV and LaTeX (`Tables/`) |
 
 The full benchmark is compute-intensive. Approximate wall-clock times on a workstation with 32 CPU cores, 60 GB of RAM and one NVIDIA RTX 5090:
 
@@ -339,14 +339,14 @@ The full benchmark is compute-intensive. Approximate wall-clock times on a works
 | `12_History_Features` | 8 min |
 | `13_History_Models` | 5.7 h |
 | `14_History_kNN` | 24 min |
-| `16_Information_by_Family` | 1.2 h |
-| `17_Margin_Calibration` | 14 min |
-| `18_ADR_Estimators` | 1 min |
-| `19_Feature_Groups` | 14 min |
-| `20_Medellin_Ladder` | 7 min |
-| `21_Error_Metrics` | 40 s |
-| `22_UVA_Ladder` | 19 min |
-| `23_Paper_Tables` | 10 s |
+| `15_Information_by_Family` | 1.2 h |
+| `16_Margin_Calibration` | 14 min |
+| `17_ADR_Estimators` | 1 min |
+| `18_Feature_Groups` | 14 min |
+| `19_Medellin_Ladder` | 7 min |
+| `20_Error_Metrics` | 40 s |
+| `21_UVA_Ladder` | 19 min |
+| `22_Paper_Tables` | 10 s |
 
 The other notebooks take minutes. Executed result cells document the reported runs, but generated search tables, data, models, residuals, and bulk analysis figures are intentionally excluded from version control and must be regenerated for a clean reproduction; the curated figures above are retained. Several notebook figures request Times New Roman and fall back to an installed font when it is unavailable.
 

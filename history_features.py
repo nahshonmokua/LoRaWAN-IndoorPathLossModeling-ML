@@ -1,4 +1,4 @@
-"""Causal link-history features for the operation-time rungs (notebooks 12 and 16).
+"""Causal link-history features for the operation-time rungs (notebooks 12 and 15).
 
 Every feature of a packet uses only earlier packets of the same link; the packet's own RSSI and SNR are never used.
 The anchor `a` is the link's mean path loss over the previous hour (fallbacks: the previous 60 packets, then 20), the

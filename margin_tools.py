@@ -1,4 +1,4 @@
-"""Calibration and validation tools for fade margins (notebooks 17 to 20).
+"""Calibration and validation tools for fade margins (notebooks 16 to 19).
 
 A margin is an upper quantile forecast of the path-loss deviation y from the link's anchor. A base predictor b gives a threshold
 for every packet, a calibration adds a shift c from earlier scores s = y - b, and a packet is covered when y <= b + c.
