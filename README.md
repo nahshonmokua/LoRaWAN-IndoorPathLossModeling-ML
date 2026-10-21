@@ -335,7 +335,7 @@ The full benchmark is compute-intensive. Approximate wall-clock times on a works
 | `06_kNN` | 20.1 h search (400 candidates, $k$ up to 50,000) and 34 min for the final fit and diagnostics (RAPIDS GPU) |
 | `07_ANN` | 3.6 h (CPU, deterministic operations; two-stage screen, 30-seed final ensemble) |
 | `08_SHADOW FADING ANALYSIS` | 41 min (mixtures with 1 to 8 components for six models, on all time blocks and leaving each one out) |
-| `09_FADE MARGIN ANALYSIS` | 1.1 h |
+| `09_FADE MARGIN ANALYSIS` | 1.8 h (margin calibration with the block bootstrap 53 min; H4 mixtures with 1 to 14 components for six families 51 min) |
 | `12_History_Features` | 8 min |
 | `13_History_Models` | 5.7 h |
 | `14_History_kNN` | 24 min |
