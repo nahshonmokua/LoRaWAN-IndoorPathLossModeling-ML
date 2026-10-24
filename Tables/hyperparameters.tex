@@ -11,7 +11,7 @@ static: Random forest & n\_estimators 300, max\_depth 7, min\_samples\_split 100
 static: XGBoost & n\_estimators 150, max\_depth 1, learning\_rate 0.06627, min\_child\_weight 25.01, gamma 0.001, subsample 0.9, colsample\_bytree 1, reg\_alpha 0.0001, reg\_lambda 0.001 \\
 static: LightGBM & n\_estimators 352, num\_leaves 96, max\_depth 1, learning\_rate 0.0254, min\_child\_samples 4440, min\_child\_weight 30, subsample 0.6, colsample\_bytree 0.7965, reg\_alpha 500, reg\_lambda 5.812 \\
 static: k-nearest neighbours & n\_neighbors 30780, weights distance, metric manhattan, scaler StandardScaler, power transform none \\
-static: ANN (multilayer perceptron) & hidden layers [32, 16], L2 0, dropout 0, learning rate 0.001, parameters 1009, final ensemble 30 seeds \\
+static: ANN (multilayer perceptron) & hidden layers [16, 8, 4], L2 0, dropout 0.1, learning rate 0.001, parameters 421, final ensemble 30 seeds \\
 history (rungs H1 to H7): Random forest & max\_depth 17, max\_features 0.7132, max\_samples 1, min\_samples\_leaf 75 \\
 history (rungs H1 to H7): XGBoost & colsample\_bytree 0.8698, learning\_rate 0.0249, max\_depth 8, min\_child\_weight 65.38, n\_estimators 365, reg\_lambda 0.2761, subsample 0.8528 \\
 history (rungs H1 to H7): LightGBM & colsample\_bytree 0.9062, learning\_rate 0.01673, min\_child\_samples 606, n\_estimators 1244, num\_leaves 141, reg\_lambda 0.1724, subsample 0.9023 \\
