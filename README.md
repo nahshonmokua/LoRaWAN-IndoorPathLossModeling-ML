@@ -10,7 +10,7 @@
 
 This study compares analytical and empirical indoor propagation laws, linear models, tree ensembles, nearest-neighbour regression and neural networks on a later period of LoRaWAN path loss measurements. It then uses out-of-fold errors to estimate fade margins at specified residual-coverage targets, and asks how those margins depend on what the predictor knows: geometry and environmental sensors only, or also the link's own earlier packets.
 
-RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 17.8 to 20.1 dB for every learned model and the calibrated COST 231 multi-wall model, although held-out RMSE ranges from 4.7 to 6.4 dB. With the link's earlier packets it falls to 7.7 to 9.8 dB when calibrated on the whole year, which includes SF11 and SF12 rows that the hold-out lacks. A margin that also conditions on the spreading factor and the state of the link needs about 4 dB on the hold-out. Notebooks 16 to 21 test the margins as quantile forecasts, compare the history models with the estimators of adaptive data rate schemes, measure what each group of inputs adds, repeat the ladder on two public datasets, and report the mean absolute error and the correlation within each link.
+RMSE and the upper residual tail are distinct objectives. With geometry and sensors alone the 99% fade margin is 17.8 to 18.5 dB for every learned model and the calibrated COST 231 multi-wall model, although held-out RMSE ranges from 4.5 to 6.4 dB. With the link's earlier packets it falls to 7.7 to 9.8 dB when calibrated on the whole year, which includes SF11 and SF12 rows that the hold-out lacks. A margin that also conditions on the spreading factor and the state of the link needs about 4 dB on the hold-out. Notebooks 16 to 21 test the margins as quantile forecasts, compare the history models with the estimators of adaptive data rate schemes, measure what each group of inputs adds, repeat the ladder on two public datasets, and report the mean absolute error and the correlation within each link.
 
 ## Experimental design
 
@@ -27,7 +27,7 @@ This gives 2,128,219 training observations (1 October 2024 to 21 July 2025) and 
 
 The end devices were restricted to spreading factors 7 to 10 in July 2025. The hold-out therefore contains SF11 or SF12 in only 33 of its rows, against 17 to 28% of the rows in the validation blocks, and margins calibrated on the validation blocks are conservative on it. The hold-out tests temporal transfer within the same building and six links; an unseen-link test fits on five links and predicts the sixth. Neither is evidence of generalisation to other buildings or link geometries.
 
-Early stopping uses the latest part of each training set in time order: for the ANN of notebook `07`, the latest tenth of the training rows within each fold and the latest training block in the final fit; the latest 10% of the rows for the ANN of the history notebooks.
+Early stopping uses the latest part of each training set in time order: for the ANN of notebook `07`, the latest tenth of the training rows within each fold and the latest training block in the final fit; the latest 10% of the rows for the ANN of the history notebooks. The ANN of notebook `07` seeds Keras directly (`keras.utils.set_random_seed`; under Keras 3, `tf.random.set_seed` leaves the initial weights, dropout and shuffling unseeded) and standardises its target inside each fit, so that two runs of the notebook give identical files; the static ANN of notebook `15` uses the same recipe.
 
 ## Main results
 
@@ -45,13 +45,13 @@ Early stopping uses the latest part of each training set in time order: for the 
 | XGBoost | 6.26 | 4.74 | 0.915 | 10.8 | 18.4 |
 | LightGBM | 6.25 | 4.77 | 0.914 | 10.8 | 18.3 |
 | k-nearest neighbours | 6.36 | 4.68 | 0.917 | 10.8 | 17.8 |
-| ANN (MLP) | 7.34 | 4.96 | 0.907 | 13.2 | 20.1 |
+| ANN (MLP) | 6.86 | 4.52 | 0.923 | 11.6 | 18.5 |
 
 *RMSE in dB. Out-of-fold RMSE pools the 1,773,515 validation rows; R² is computed from the held-out residual files; margins in dB at the 95% and 99% residual-coverage targets.*
 
-kNN leads at 4.68 dB (95% CI 4.43 to 4.92), resolved ahead of the random forest at 4.74 dB by 0.06 dB (CI 0.00 to 0.12) but not of XGBoost at 4.74 and LightGBM at 4.77 dB (0.07 and 0.09 dB, with intervals that include zero); the ANN at 4.96 dB is behind kNN by 0.28 dB (CI 0.12 to 0.45) and behind the random forest by 0.22 dB. kNN and the three tree ensembles are resolved ahead of the linear model, by 0.44 to 0.53 dB; the ANN's 0.25 dB is not. The ANN's out-of-fold RMSE is the highest of the learned models (7.34 dB) and its 99% margin the widest (20.1 dB); its one-standard-error selection among candidates that differ by tenths of a decibel of validation RMSE chose a 32/16 network without regularisation, whose 30-seed ensemble reaches 4.96 dB (single seeds 4.86 to 6.20 dB). The kNN's $k$ was searched from 100 to 50,000 together with the metric, the weighting and the scaling; the selected $k$ = 30,780 (Manhattan distance, distance weights) lies inside that range; it is 1.4% of the training rows, about 9% of the packets of one link, so the prediction is a heavily smoothed average. Every data-driven model beats the calibrated COST 231 multi-wall model by at least 1.2 dB and the fixed-parameter propagation models by at least 2.3 dB.
+The ANN leads at 4.52 dB (95% CI 4.28 to 4.75), resolved ahead of kNN at 4.68 dB by 0.16 dB (CI 0.04 to 0.26) and of the three tree ensembles by 0.22 to 0.25 dB; kNN is resolved ahead of the random forest at 4.74 dB by 0.06 dB (CI 0.00 to 0.12) but not of XGBoost at 4.74 and LightGBM at 4.77 dB (0.07 and 0.09 dB, with intervals that include zero). The five nonlinear models are resolved ahead of the linear model, by 0.44 to 0.69 dB. The ANN's one-standard-error selection, among candidates that differ by tenths of a decibel of validation RMSE, chose a 16/8/4 network with dropout 0.1 (421 parameters), whose 30-seed ensemble reaches 4.52 dB (single seeds 4.50 to 5.30 dB). The kNN's $k$ was searched from 100 to 50,000 together with the metric, the weighting and the scaling; the selected $k$ = 30,780 (Manhattan distance, distance weights) lies inside that range; it is 1.4% of the training rows, about 9% of the packets of one link, so the prediction is a heavily smoothed average. Every data-driven model beats the calibrated COST 231 multi-wall model by at least 1.2 dB and the fixed-parameter propagation models by at least 2.3 dB.
 
-At a 99% residual-coverage target the learned static models and COST 231 need 17.8 to 20.1 dB, at 98% 14.8 to 16.9 dB and at 95% 10.8 to 13.2 dB; the other propagation models need more. The spread between the learned models, 2.3 dB at 99%, comes mostly from the ANN; the five others lie within 0.7 dB. Every margin in this repository is the empirical quantile of the out-of-fold residuals, the split-conformal shift of `margin_tools.py`; a Gaussian-mixture tail estimate, with the number of components chosen by cross-validation over the time blocks, is reported next to it as a sensitivity check and lies within 0.3 dB of it at 99% for the static models and within 0.05 dB for every family on history rung H4 (notebook 09). Held-out coverage at the 99% margin is 99.7 to 99.8%, and a fixed 10 dB margin reaches 96.4 to 98.3%. Intervals come from a device-aware moving-block bootstrap.
+At a 99% residual-coverage target the learned static models and COST 231 need 17.8 to 18.5 dB, at 98% 14.8 to 15.5 dB and at 95% 10.8 to 11.6 dB; the other propagation models need more. The six learned models lie within 0.7 dB of each other at 99%. Every margin in this repository is the empirical quantile of the out-of-fold residuals, the split-conformal shift of `margin_tools.py`; a Gaussian-mixture tail estimate, with the number of components chosen by cross-validation over the time blocks, is reported next to it as a sensitivity check and lies within 0.5 dB of it at 99% for the static models and within 0.05 dB for every family on history rung H4 (notebook 09). Held-out coverage at the 99% margin is 99.7 to 99.8%, and a fixed 10 dB margin reaches 97.4 to 98.3%. Intervals come from a device-aware moving-block bootstrap.
 
 ### Link history
 
@@ -68,13 +68,13 @@ From here the response is the deviation of path loss from the link's previous-ho
 | XGBoost | 4.74 / 18.4 | 2.18 / 9.0 | 1.96 / 8.6 | 1.96 / 8.6 | 1.77 / 7.9 | 1.77 / 7.9 | 1.77 / 7.9 | 1.77 / 7.9 |
 | LightGBM | 4.77 / 18.3 | 2.16 / 8.9 | 1.89 / 8.3 | 1.89 / 8.3 | 1.77 / 7.7 | 1.77 / 7.7 | 1.77 / 7.8 | 1.77 / 7.7 |
 | k-nearest neighbours | 4.68 / 17.8 | 2.29 / 9.4 | 2.12 / 9.3 | 2.15 / 9.4 | 1.96 / 8.8 | 1.98 / 8.8 | 2.01 / 9.0 | 2.04 / 9.2 |
-| ANN (MLP) | 4.96 / 20.1 | 2.32 / 9.2 | 2.13 / 9.0 | 2.12 / 9.0 | 1.84 / 7.8 | 1.81 / 7.7 | 1.82 / 7.8 | 1.82 / 7.8 |
+| ANN (MLP) | 4.52 / 18.5 | 2.32 / 9.2 | 2.13 / 9.0 | 2.12 / 9.0 | 1.84 / 7.8 | 1.81 / 7.7 | 1.82 / 7.8 | 1.82 / 7.8 |
 
 *Hold-out RMSE / 99% fade margin, both in dB; the rungs are cumulative from left to right. The static column is the model of the table above. Without a fitted model: link mean 4.94 dB / 18.8 dB; previous-hour mean 2.48 dB / 10.6 dB; previous packet 2.96 dB / 12.0 dB.*
 
-Adding the link's earlier packets halves RMSE and brings the 99% margin from 17.8 to 20.1 dB to between 8.9 and 9.8 dB in every family. The later rungs lower RMSE further, to 1.8 dB for the boosted trees, and the margin by up to 1.5 dB more (the boosted trees reach 7.7 to 7.9 dB), in the tree ensembles and the ANN almost entirely through the same-channel history and the spreading factor. At the last rung the boosted trees, the random forest and the ANN end between 1.77 and 1.82 dB; kNN and the linear model are 0.2 to 0.4 dB behind.
+Adding the link's earlier packets halves RMSE and brings the 99% margin from 17.8 to 18.5 dB to between 8.9 and 9.8 dB in every family. The later rungs lower RMSE further, to 1.8 dB for the boosted trees, and the margin by up to 1.5 dB more (the boosted trees reach 7.7 to 7.9 dB), in the tree ensembles and the ANN almost entirely through the same-channel history and the spreading factor. At the last rung the boosted trees, the random forest and the ANN end between 1.77 and 1.82 dB; kNN and the linear model are 0.2 to 0.4 dB behind.
 
-Fitted on five links and tested on the sixth (rung H4), against the same model fitted on the same blocks with the link included, the tree ensembles reach 1.84 to 1.86 dB on the unseen link, at most 0.01 dB above the model that saw the link; the ANN reaches 1.87 dB, kNN 2.07 dB and the linear model 2.19 dB, and the largest penalty in any family is 0.02 dB (the ANN). Coverage at the calibrated 99% margin is 99.4 to 99.9% per unseen link. The static models do not transfer: fitted on five links with the settings of the table above, they reach 6.4 to 14.9 dB on the sixth as a mean over the six links, against 4.6 to 5.1 dB with the link in training (`CV_Results/unseen_link_static.csv`), the tree ensembles missing ED5, which lies beyond the 37 m of the other links, by 10 to 20 dB. The history model needs one other link: fitted on one other link, LightGBM on rung H4 predicts the held-out link at 1.89 dB on average, fitted on five at 1.84 dB, and with the link itself in training at 1.84 dB, against 2.47 dB for the anchor alone (`CV_Results/links_curve_H4.csv`).
+Fitted on five links and tested on the sixth (rung H4), against the same model fitted on the same blocks with the link included, the tree ensembles reach 1.84 to 1.86 dB on the unseen link, at most 0.01 dB above the model that saw the link; the ANN reaches 1.87 dB, kNN 2.07 dB and the linear model 2.19 dB, and the largest penalty in any family is 0.02 dB (the ANN). Coverage at the calibrated 99% margin is 99.4 to 99.9% per unseen link. The static models do not transfer: fitted on five links with the settings of the table above, they reach 6.4 to 11.0 dB on the sixth as a mean over the six links, against 4.5 to 5.1 dB with the link in training (`CV_Results/unseen_link_static.csv`), the tree ensembles missing ED5, which lies beyond the 37 m of the other links, by 10 to 20 dB. The history model needs one other link: fitted on one other link, LightGBM on rung H4 predicts the held-out link at 1.89 dB on average, fitted on five at 1.84 dB, and with the link itself in training at 1.84 dB, against 2.47 dB for the anchor alone (`CV_Results/links_curve_H4.csv`).
 
 ### Mean absolute error and correlation
 
@@ -88,7 +88,7 @@ Notebook 20 adds the mean absolute error and the Pearson correlation between mea
 | XGBoost | 3.74 [3.56, 3.93] | 4.74 | +1.36 | 0.915 | 0.961 [0.955, 0.966] | +0.11 [+0.09, +0.13] |
 | LightGBM | 3.77 [3.59, 3.96] | 4.77 | +1.45 | 0.914 | 0.961 [0.955, 0.966] | +0.12 [+0.10, +0.14] |
 | k-nearest neighbours | 3.61 [3.40, 3.82] | 4.68 | +0.91 | 0.917 | 0.963 [0.958, 0.969] | +0.05 [-0.02, +0.12] |
-| ANN (MLP) | 3.80 [3.53, 4.10] | 4.96 | -0.18 | 0.907 | 0.959 [0.952, 0.965] | -0.05 [-0.13, +0.04] |
+| ANN (MLP) | 3.50 [3.31, 3.70] | 4.52 | +0.52 | 0.923 | 0.961 [0.955, 0.967] | -0.09 [-0.16, -0.01] |
 | Link mean (no model) | 3.94 [3.76, 4.13] | 4.94 | +1.55 | 0.908 | 0.959 [0.954, 0.964] | constant per link |
 | Previous-hour mean (no model) | 1.84 [1.80, 1.87] | 2.48 | +0.00 | 0.977 | 0.988 [0.987, 0.989] | +0.81 [+0.78, +0.83] |
 | LightGBM + link history | 1.60 [1.58, 1.63] | 2.16 | +0.02 | 0.982 | 0.991 [0.990, 0.992] | +0.86 [+0.84, +0.88] |
@@ -97,9 +97,9 @@ Notebook 20 adds the mean absolute error and the Pearson correlation between mea
 
 *MAE, RMSE and bias in dB; r is the Pearson correlation between measured and predicted path loss. The first seven rows use geometry and sensors only; the last three use the rungs of the table above.*
 
-- **Over all links the correlation mostly identifies the link.** The mean path loss of the links spans 43 dB (66 dB for ED0, 109 dB for ED5) and 93% of the variance of the path loss on the hold-out lies between the links, so one constant per link scores 0.957 and every static machine-learning model between 0.951 and 0.961. COST 231 scores 0.924, the models with link history 0.988 to 0.994.
+- **Over all links the correlation mostly identifies the link.** The mean path loss of the links spans 43 dB (66 dB for ED0, 109 dB for ED5) and 93% of the variance of the path loss on the hold-out lies between the links, so one constant per link scores 0.959 and every static machine-learning model between 0.953 and 0.963. COST 231 scores 0.926, the models with link history 0.988 to 0.994.
 - **Within a link no static model follows the path loss in time.** Their correlation lies between -0.11 and +0.12, the previous-hour mean alone reaches 0.81 and the models with link history 0.83 to 0.91. The -0.11 of the physical models is the channel: the carrier frequency is their only input that changes within a link, a term of 0.005 dB, and a correlation does not depend on scale, so it equals the correlation of the measured path loss with the frequency.
-- **The MAE orders the static models like the RMSE, except for the ANN.** kNN, random forest, XGBoost, LightGBM, link mean and linear model stand in the same order by both measures; the ANN is fifth by MAE and sixth by RMSE. The static machine-learning models reach 3.61 dB (kNN) to 4.10 dB (linear), COST 231 5.05 dB and the models with link history 1.3 to 1.7 dB. The fitted static models and the link mean are biased by -0.2 to +1.6 dB on the summer hold-out, the models with link history by at most 0.25 dB.
+- **The MAE orders the static models like the RMSE.** ANN, kNN, random forest, XGBoost, LightGBM, link mean and linear model stand in the same order by both measures. The static machine-learning models reach 3.50 dB (ANN) to 4.10 dB (linear), COST 231 5.05 dB and the models with link history 1.3 to 1.7 dB. The fitted static models and the link mean are biased by +0.5 to +1.6 dB on the summer hold-out, the models with link history by at most 0.25 dB.
 
 ### Calibrating and validating the margins
 
@@ -171,19 +171,19 @@ Notebook 18 repeats the static benchmark with one LightGBM tuned separately on e
 - **Every subset with the geometry, and without the SNR of the same packet, is within 0.20 dB of the per-link mean.** The whole range is as large as the noise of the tuning: repeating the search and the fits for the same inputs moves the hold-out RMSE by up to 0.07 dB. Distance alone, which is the per-link mean up to shrinkage, lands 0.08 dB below it, so differences of that size are not resolved.
 - **The environment adds about 0.1 dB, not resolved from zero.** Added to the geometry it lowers the hold-out RMSE from 4.86 to 4.75 dB; added to geometry and channel, by 0.08 dB, with an interval from -0.19 to +0.03. Both are of the order of the tuning noise. The sensors alone remove 4% of the variance around one mean for all links, where the training mean of each link removes 91%.
 - **The SNR of the same packet, the predictor of the submitted manuscript, is worth 0.07 dB here, not resolved from zero.** Added to the benchmark it lowers the hold-out RMSE from 4.77 to 4.70 dB (-0.07 [-0.17, +0.04]) and raises the 99% shift from 18.28 to 18.40 dB. Link by link it ranges from -0.70 dB on ED5, the weakest link, to +0.50 dB on ED1, where the added input makes the model worse; every office link operates at a median SNR of 8.2 to 10.5 dB (`CV_Results/static_snr_leak.csv`). It is known only once the packet has been received, so it cannot enter a link budget; on the public datasets the same leak is worth 0.64 dB (Medellín) and 0.53 dB (campus).
-- **The link's history is the step.** It lowers the RMSE by 2.29 to 2.88 dB in every family. Of the groups that follow, the same-channel history changes the hold-out RMSE by -0.27 to -0.13 dB over the families and the spreading factor by -0.28 to -0.01 dB (negative: the added inputs help), while the SNR of earlier packets, the clock, the sensors and the link level with the geometry change it by no more than 0.04 dB in any family (table below).
+- **The link's history is the step.** It lowers the RMSE by 2.20 to 2.88 dB in every family. Of the groups that follow, the same-channel history changes the hold-out RMSE by -0.27 to -0.13 dB over the families and the spreading factor by -0.28 to -0.01 dB (negative: the added inputs help), while the SNR of earlier packets, the clock, the sensors and the link level with the geometry change it by no more than 0.04 dB in any family (table below).
 
 | Step | Linear regression | Random forest | XGBoost | LightGBM | k-nearest neighbours | ANN (MLP) |
 |---|---|---|---|---|---|---|
-| static to H1: link history | -2.88 | -2.69 | -2.68 | -2.69 | -2.32 | -2.29 |
-| H1 to H2: same-channel history | -0.13 | -0.15 | -0.22 | -0.27 | -0.14 | -0.18 |
+| static to H1: link history | -2.88 | -2.56 | -2.56 | -2.61 | -2.39 | -2.20 |
+| H1 to H2: same-channel history | -0.13 | -0.15 | -0.22 | -0.27 | -0.17 | -0.18 |
 | H2 to H3: clock | 0.00 | 0.00 | 0.00 | 0.00 | +0.03 | -0.01 |
 | H3 to H4: spreading factor | -0.01 | -0.23 | -0.19 | -0.12 | -0.19 | -0.28 |
-| H4 to H5: earlier SNR | 0.00 | 0.00 | 0.00 | 0.00 | -0.04 | -0.03 |
-| H5 to H6: sensors | 0.00 | 0.00 | 0.00 | 0.00 | +0.04 | 0.00 |
-| H6 to H7: level, geometry | 0.00 | 0.00 | 0.00 | 0.00 | +0.04 | 0.00 |
+| H4 to H5: earlier SNR | 0.00 | 0.00 | 0.00 | 0.00 | +0.02 | -0.03 |
+| H5 to H6: sensors | 0.00 | 0.00 | 0.00 | 0.00 | +0.03 | 0.00 |
+| H6 to H7: level, geometry | 0.00 | 0.00 | 0.00 | 0.00 | +0.03 | 0.00 |
 
-*Hold-out RMSE of the later rung minus that of the earlier rung, in dB (negative: the added inputs help), on the packets common to all models. The 95% intervals from resampling days have half-widths of 0.21 to 0.30 dB at the first step and at most 0.01 dB afterwards; they exclude zero except for Linear regression, Random forest, XGBoost, LightGBM (H6 to H7: level, geometry). All steps with their intervals are in `CV_Results/history_group_steps.csv`.*
+*Hold-out RMSE of the later rung minus that of the earlier rung, in dB (negative: the added inputs help), on the packets common to all models. The 95% intervals from resampling days have half-widths of 0.21 to 0.28 dB at the first step and at most 0.01 dB afterwards; they exclude zero except for Linear regression, Random forest, XGBoost, LightGBM (H6 to H7: level, geometry). All steps with their intervals are in `CV_Results/history_group_steps.csv`.*
 
 ### The same ladder on an independent public dataset
 
@@ -325,7 +325,7 @@ Run the numbered notebooks from the repository root. Their order is the dependen
 | Second public dataset | [`21_UVA_Ladder.ipynb`](21_UVA_Ladder.ipynb) | The ladder, the margins under drift and the unseen-sensor test on the campus metadata |
 | Manuscript tables | [`22_Paper_Tables.ipynb`](22_Paper_Tables.ipynb) | Dataset by device, spreading-factor schedule, selected hyperparameters and software versions, as CSV and LaTeX (`Tables/`) |
 
-The full benchmark is compute-intensive. Approximate wall-clock times on a workstation with 32 CPU cores, 60 GB of RAM and one NVIDIA RTX 5090, from the run of 21 and 22 October 2026 on version 4 of the data, in which the k-NN search ran beside the other notebooks:
+The full benchmark is compute-intensive. Approximate wall-clock times on a workstation with 32 CPU cores, 60 GB of RAM and one NVIDIA RTX 5090, from the run of 21 and 22 October 2026 on version 4 of the data, in which the k-NN search ran beside the other notebooks, and for `07` and the notebooks that read its outputs from the re-run of 23 and 24 October, one notebook at a time:
 
 | Notebook | Time |
 |---|---|
@@ -333,16 +333,16 @@ The full benchmark is compute-intensive. Approximate wall-clock times on a works
 | `04_XGBoost` | 66 min beside the k-NN search, 7 min alone (CUDA) |
 | `05_LightGBM` | 37 min |
 | `06_kNN` | 21.5 h: the search (400 candidates, $k$ up to 50,000) and the final fit and diagnostics (RAPIDS GPU) |
-| `07_ANN` | 2.9 h (CPU, deterministic operations; two-stage screen, 30-seed final ensemble) |
+| `07_ANN` | 3.3 h (CPU, deterministic operations; two-stage screen, 30-seed final ensemble) |
 | `08_SHADOW FADING ANALYSIS` | 42 min (mixtures with 1 to 8 components for six models, on all time blocks and leaving each one out) |
 | `09_FADE MARGIN ANALYSIS` | 3.5 h (margin calibration with the block bootstrap; H4 mixtures with 1 to 24 components for six families) |
 | `12_History_Features` | 1 min |
 | `13_History_Models` | 6.4 h |
 | `14_History_kNN` | 24 min |
-| `15_Information_by_Family` | 46 min |
-| `16_Margin_Calibration` | 19 min |
+| `15_Information_by_Family` | 71 min |
+| `16_Margin_Calibration` | 14 min |
 | `17_ADR_Estimators` | 1 min |
-| `18_Feature_Groups` | 18 min |
+| `18_Feature_Groups` | 14 min |
 | `19_Medellin_Ladder` | 7 min |
 | `20_Error_Metrics` | 35 s |
 | `21_UVA_Ladder` | 19 min |
