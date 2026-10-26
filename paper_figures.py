@@ -15,7 +15,7 @@ MARKER_SIZE = {"o": 4.2, "s": 3.8, "^": 4.4, "D": 3.6, "v": 4.4, "p": 4.6}     #
 INK, INK2 = "#1a1a1a", "#4d4d4d"
 AMBER, AMBER_DARK = COLOUR["LGBM"], "#a86f00"
 
-# The rungs of Table 5 on an axis: the rung, then what it adds, in brackets
+# The rungs on an axis: the rung, then what it adds, in brackets
 RUNG_LABEL = {"static": "static", "H1": "H1\n(history)", "H2": "H2\n(channel)", "H3": "H3\n(clock)", "H4": "H4\n(SF)", "H5": "H5\n(SNR)",
               "H6": "H6\n(sensors)", "H7": "H7\n(geometry)"}
 
@@ -74,5 +74,5 @@ def break_marks(ax_top, ax_bottom, size=0.012):
 
 
 def panel(ax, tag):
-    """The panel label, inside the axes at the top left (the Q-Q plots of Appendix B)."""
+    """The panel label, inside the axes at the top left (the Q-Q plots of notebook 08)."""
     ax.text(0.025, 0.975, f"({tag})", transform=ax.transAxes, ha="left", va="top", fontsize=9)
