@@ -324,6 +324,7 @@ Run the numbered notebooks from the repository root. Their order is the dependen
 | Error metrics | [`20_Error_Metrics.ipynb`](20_Error_Metrics.ipynb) | MAE, bias and Pearson correlation, pooled and within link, for every model |
 | Second public dataset | [`21_UVA_Ladder.ipynb`](21_UVA_Ladder.ipynb) | The ladder, the margins under drift and the unseen-sensor test on the campus metadata |
 | Manuscript tables | [`22_Paper_Tables.ipynb`](22_Paper_Tables.ipynb) | Dataset by device, spreading-factor schedule, selected hyperparameters and software versions, as CSV and LaTeX (`Tables/`); the generalization figure, which joins notebooks 15 and 17 |
+| History tuning per rung | [`23_History_Retuning.ipynb`](23_History_Retuning.ipynb) | LightGBM and XGBoost tuned on the inputs of rungs H4 to H7 against the setting tuned on H4: the later rungs gain nothing (`CV_Results/history_retuning.csv`) |
 
 The full benchmark is compute-intensive. Approximate wall-clock times on a workstation with 32 CPU cores, 60 GB of RAM and one NVIDIA RTX 5090, from the run of 21 and 22 October 2026 on version 4 of the data, in which the k-NN search ran beside the other notebooks, and for `07` and the notebooks that read its outputs from the re-run of 23 and 24 October, one notebook at a time:
 
@@ -347,6 +348,7 @@ The full benchmark is compute-intensive. Approximate wall-clock times on a works
 | `20_Error_Metrics` | 35 s |
 | `21_UVA_Ladder` | 19 min |
 | `22_Paper_Tables` | 7 s |
+| `23_History_Retuning` | 36 min (eight searches and refits, XGBoost on the GPU) |
 
 The other notebooks take minutes. Executed result cells document the reported runs, but generated search tables, data, models, residuals, and bulk analysis figures are intentionally excluded from version control and must be regenerated for a clean reproduction; the curated figures above are retained. Several notebook figures request Times New Roman and fall back to an installed font when it is unavailable.
 
