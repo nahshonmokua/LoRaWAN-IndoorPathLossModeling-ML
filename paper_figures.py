@@ -1,7 +1,7 @@
-"""The figure style of the paper: every figure is drawn at its printed width (IEEE column 3.5 in, page 7.16 in) in a Times-like serif,
-with ticks inside the axes, legends inside the panels and a subcaption "(a) ..." below each panel. The six model families keep one colour
-and one marker in every figure; the colours are told apart under every colour-vision deficiency, pair by pair. Everything that is not a
-family (baselines, estimators, datasets) is drawn in ink and greys, and the LightGBM results that the paper takes as reference in amber."""
+"""Figure style: every figure is drawn at its printed width (IEEE column 3.5 in, page 7.16 in) in a Times-like serif, with ticks
+inside the axes, legends inside the panels and a subcaption "(a) ..." below each panel. The six model families keep one colour and
+one marker in every figure; the colours are told apart under every colour-vision deficiency, pair by pair. Everything that is not a
+family (baselines, estimators, datasets) is drawn in ink and greys, and LightGBM on the reference rung in amber."""
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
@@ -21,7 +21,7 @@ RUNG_LABEL = {"static": "static", "H1": "H1\n(history)", "H2": "H2\n(channel)", 
 
 
 def use():
-    """Matplotlib's defaults plus the sizes of the paper; called at the top of every figure cell."""
+    """Matplotlib's defaults plus the printed sizes; called at the top of every figure cell."""
     plt.rcdefaults()
     plt.rcParams.update({
         "font.family": "serif", "font.serif": ["Times New Roman", "DejaVu Serif"], "mathtext.fontset": "stix",
