@@ -1,22 +1,7 @@
-"""The distribution of path-loss residuals that are reported in whole dB.
-
-RSSI is an integer, so a residual is known to +-0.5 dB and the residuals sit on a 1 dB comb. dequantise() spreads each
-residual uniformly over its rounding interval (one fixed draw), and every distributional analysis runs on that series.
-
-Gaussian mixtures are fitted by EM on 0.01 dB bins (grouped-data EM) from several starts: equally spaced quantiles,
-random means, and every split of the best fit with one component fewer, so the log-likelihood cannot fall as the number
-of components K grows; no component is narrower than the spread of the dequantisation. select_mixture() chooses K by
-cross-validation over the time blocks of the out-of-fold residuals (fit on all blocks but one, score the left-out block):
-the smallest K whose held-out log-likelihood is within one standard error of the best, the standard error from the
-per-block differences; the range of K must reach past the best (checked). BIC is reported for comparison; with millions of
-autocorrelated residuals it keeps falling as K grows.
-
-block_rows() chooses the block length of the moving-block bootstrap of a quantile. The quantile's uncertainty depends on
-the exceedance indicator 1{r > Q_{1-p}}, whose variance over calendar blocks, times the block length, grows with the
-length until the blocks are longer than the dependence (batch means) and then levels off at the long-run variance. The
-block is the shortest length of a grid from one hour to four weeks at which that variance, summed over the links, is at
-least 80 % of its largest value, for every target p. The Politis-White automatic rule is not usable on these residuals:
-their dependence lasts for days, beyond the rule's horizon, so it returns its own cap on every link.
+"""Path-loss residuals reported in whole dB: dequantise() spreads each residual over its rounding interval (one fixed draw);
+fit_mixture(), refit_mixture() and select_mixture() fit Gaussian mixtures by grouped-data EM and choose the number of components by
+cross-validation over the time blocks (the smallest K within one standard error of the best held-out log-likelihood);
+batch_means() and block_rows() choose the block length of the moving-block bootstrap of a quantile from the exceedance rate.
 """
 from typing import NamedTuple
 
