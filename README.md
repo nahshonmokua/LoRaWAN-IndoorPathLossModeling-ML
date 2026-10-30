@@ -90,9 +90,17 @@ Hold-out window 21 July to 30 September 2025, 532,055 packets; RMSE and the 99 %
 
 Every family on every rung is in `CV_Results/information_by_family.csv`; the paired intervals of the static models in `CV_Results/bootstrap_test_comparison.csv`; the margins by operating state and the estimators of adaptive data rate schemes in the result files of notebooks 16 and 17; the input groups with intervals in `CV_Results/static_feature_groups.csv` and `history_group_steps.csv`; the public datasets in `CV_Results/medellin_ladder.csv` and `uva_ladder.csv`.
 
+![Held-out RMSE of the static models](docs/assets/held-out-rmse.png)
+
+*Held-out RMSE of every static model with its 95 % interval from a paired circular moving-block bootstrap (1,000 replicates, blocks of 5,000 packets), on the 532,055 packets common to all models.*
+
 ![Hold-out RMSE and 99 % margin by rung and family](docs/assets/information-by-family.png)
 
 *Hold-out RMSE (a) and 99 % margin (b) of the six families on the static inputs and on the rungs H1 to H7; dashed, the per-link mean; dotted, the previous-hour mean.*
+
+![Coverage and mean margin of four margins by state and by test window](docs/assets/margin-calibration.png)
+
+*Coverage (top) and mean margin above the anchor (bottom) of four margins at the 99 % target, LightGBM on rung H4: by working hours (a), recent spread (b) and spreading factor (c) on the hold-out, with 95 % intervals from resampling days, and in each test window, calibrated on the blocks before it (d).*
 
 ![The ladder on the office data and on the two public datasets](docs/assets/ladder-three-datasets.png)
 
