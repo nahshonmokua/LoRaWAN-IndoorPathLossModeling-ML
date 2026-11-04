@@ -75,4 +75,4 @@ def break_marks(ax_top, ax_bottom, size=0.012):
 
 def panel(ax, tag):
     """The panel label, inside the axes at the top left (the Q-Q plots of notebook 08)."""
-    ax.text(0.025, 0.975, f"({tag})", transform=ax.transAxes, ha="left", va="top", fontsize=9)
+    ax.text(0.025, 0.975, f"({tag})", transform=ax.transAxes, ha="left", va="top")
