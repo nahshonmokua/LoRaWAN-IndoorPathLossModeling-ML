@@ -5,7 +5,7 @@ family (baselines, estimators, datasets) is drawn in ink and greys, and LightGBM
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
-COLUMN, PAGE = 3.5, 7.16
+COLUMN, PAGE = 246 / 72.27, 504 / 72.27                    # the printed column and text widths (246 pt and 504 pt), in inches
 
 FAMILIES = ["Linear", "RF", "XGB", "LGBM", "KNN", "ANN"]
 NAME = {"Linear": "Linear", "RF": "RF", "XGB": "XGBoost", "LGBM": "LightGBM", "KNN": "$k$-NN", "ANN": "ANN"}
@@ -15,9 +15,9 @@ MARKER_SIZE = {"o": 4.2, "s": 3.8, "^": 4.4, "D": 3.6, "v": 4.4, "p": 4.6}     #
 INK, INK2 = "#1a1a1a", "#4d4d4d"
 AMBER, AMBER_DARK = COLOUR["LGBM"], "#a86f00"
 
-# The rungs on an axis: the rung, then what it adds, in brackets
-RUNG_LABEL = {"static": "static", "H1": "H1\n(history)", "H2": "H2\n(channel)", "H3": "H3\n(clock)", "H4": "H4\n(SF)", "H5": "H5\n(SNR)",
-              "H6": "H6\n(sensors)", "H7": "H7\n(geometry)"}
+# The rungs on an axis: the rung, then what it adds
+RUNG_LABEL = {"static": "static", "H1": "H1\nhistory", "H2": "H2\nchannel", "H3": "H3\nclock", "H4": "H4\nSF", "H5": "H5\nSNR",
+              "H6": "H6\nsensors", "H7": "H7\ngeometry"}
 
 
 def use():
@@ -25,7 +25,7 @@ def use():
     plt.rcdefaults()
     plt.rcParams.update({
         "font.family": "serif", "font.serif": ["Times New Roman", "DejaVu Serif"], "mathtext.fontset": "stix",
-        "font.size": 8, "axes.labelsize": 8, "xtick.labelsize": 7.5, "ytick.labelsize": 7.5, "legend.fontsize": 7.5,
+        "font.size": 8, "axes.labelsize": 8, "xtick.labelsize": 8, "ytick.labelsize": 8, "legend.fontsize": 8,
         "axes.linewidth": 0.6, "axes.edgecolor": INK2, "axes.labelcolor": INK, "xtick.color": INK2, "ytick.color": INK2,
         "xtick.labelcolor": INK, "ytick.labelcolor": INK, "xtick.major.width": 0.6, "ytick.major.width": 0.6,
         "xtick.major.size": 2.5, "ytick.major.size": 2.5, "xtick.direction": "in", "ytick.direction": "in",
