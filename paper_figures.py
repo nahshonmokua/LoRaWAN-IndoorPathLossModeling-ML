@@ -65,6 +65,33 @@ def subcaptions(fig, axes, texts, pad_pt=5):
             fig.text((box.x0 + box.x1) / 2, y, text, ha="center", va="top", fontsize=8)
 
 
+def row_regions(fig, ax, groups, right, half, gap=2.0, margin=0.75):
+    """Shade groups of rows as regions behind the labels and the panels, from the left edge of the saved image to `right` (a figure
+    fraction). groups: (colour, first row, last row) in row order, the rows at integer y on ax, whose y axis runs downwards; half: the half
+    height of the bars in rows. Two neighbouring regions are parted by a white gap of `gap` pt, centred between the bars and the label of
+    the last row of the one and those of the first row of the other. Checks that every label and bar lies at least `margin` pt inside its
+    region, the labels also from the region's left edge."""
+    from matplotlib.patches import Rectangle
+    fig.canvas.draw()
+    renderer, pt = fig.canvas.get_renderer(), fig.dpi / 72
+    y = lambda row: ax.transData.transform((0, row))[1]                       # display y, upwards
+    label = {int(round(t)): s.get_window_extent(renderer) for t, s in zip(ax.get_yticks(), ax.get_yticklabels())}
+    top = lambda row: max(y(row - half), label[row].y1)                        # the highest point of a row's bar and label
+    bottom = lambda row: min(y(row + half), label[row].y0)
+    edges = [max(y(groups[0][1] - 0.46), top(groups[0][1]) + margin * pt)]
+    for (_, _, last), (_, first, _) in zip(groups, groups[1:]):
+        mid = (bottom(last) + top(first)) / 2
+        assert bottom(last) - mid >= (gap / 2 + margin) * pt and mid - top(first) >= (gap / 2 + margin) * pt, f"no room for a gap between rows {last} and {first}"
+        edges += [mid + gap / 2 * pt, mid - gap / 2 * pt]
+    edges.append(min(y(groups[-1][2] + 0.46), bottom(groups[-1][2]) - margin * pt))
+    pad = plt.rcParams["savefig.pad_inches"] / fig.get_figwidth()             # the saved image starts this far before the figure's content
+    to_fig = fig.transFigure.inverted()
+    for (colour, _, _), upper, lower in zip(groups, edges[0::2], edges[1::2]):
+        y0, y1 = to_fig.transform((0, lower))[1], to_fig.transform((0, upper))[1]
+        fig.patches.append(Rectangle((pad, y0), right - pad, y1 - y0, transform=fig.transFigure, facecolor=colour, edgecolor="none", zorder=-10))
+    assert min(s.x0 for s in label.values()) >= (pad * fig.get_figwidth() * 72 + 2) * pt, "a label leaves the shading at the left"
+
+
 def break_marks(ax_top, ax_bottom, size=0.012):
     """Diagonal marks on both spines where a y-axis is broken between two stacked axes."""
     for ax, y in ((ax_top, 0), (ax_bottom, 1)):
