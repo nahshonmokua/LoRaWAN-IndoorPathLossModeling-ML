@@ -11,6 +11,7 @@ plotly==5.24.1
 openpyxl==3.1.5
 pyarrow==25.0.1
 nbformat==5.10.4
+nbclient==0.11.0
 xgboost==2.1.1
 lightgbm==4.5.0
 tensorflow==2.21.0
