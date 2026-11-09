@@ -1,0 +1,29 @@
+{
+ "static inputs without the weather": {
+  "colsample_bytree": 0.5055131474105163,
+  "learning_rate": 0.021478494835860045,
+  "min_child_samples": 12,
+  "n_estimators": 545,
+  "num_leaves": 229,
+  "reg_lambda": 28.41342792178114,
+  "subsample": 0.9292685048823873
+ },
+ "static inputs": {
+  "colsample_bytree": 0.7573761413840239,
+  "learning_rate": 0.01,
+  "min_child_samples": 259,
+  "n_estimators": 418,
+  "num_leaves": 255,
+  "reg_lambda": 15.85108393910671,
+  "subsample": 0.7217406519270689
+ },
+ "static inputs + SNR of the same packet": {
+  "colsample_bytree": 0.5,
+  "learning_rate": 0.01,
+  "min_child_samples": 5,
+  "n_estimators": 529,
+  "num_leaves": 255,
+  "reg_lambda": 0.1,
+  "subsample": 0.6
+ }
+}

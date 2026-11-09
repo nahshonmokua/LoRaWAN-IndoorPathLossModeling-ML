@@ -1,0 +1,7 @@
+inputs,seed,hold_out_rmse
+geometry + channel + environment,1,4.738990178959319
+geometry + channel + environment,2,4.74744310193206
+geometry + channel + environment,3,4.767086854616117
+geometry + environment,1,4.811477691026835
+geometry + environment,2,4.747230629835988
+geometry + environment,3,4.795379702299554

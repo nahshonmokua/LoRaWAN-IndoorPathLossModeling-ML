@@ -13,12 +13,10 @@ venv/
 .idea/
 .DS_Store
 
-# Data, models, residuals, results, figures and tables written by the notebooks
+# Written by the notebooks and not versioned (the result files in CV_Results/, FM_Results/ and Shadow_Results/ are)
 Data_Files/
 Models/
 Residuals/
-CV_Results/
-FM_Results/
-Shadow_Results/
 Figures/
 Tables/
+FM_Results/*.pkl

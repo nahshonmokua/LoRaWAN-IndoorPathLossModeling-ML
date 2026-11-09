@@ -1,0 +1,20 @@
+{
+ "static inputs": {
+  "colsample_bytree": 0.869062162847613,
+  "learning_rate": 0.028073054582883637,
+  "min_child_samples": 55,
+  "n_estimators": 649,
+  "num_leaves": 27,
+  "reg_lambda": 0.2023738143368722,
+  "subsample": 0.9735438761536426
+ },
+ "static inputs + SNR of the same packet": {
+  "colsample_bytree": 0.5689815226269245,
+  "learning_rate": 0.01,
+  "min_child_samples": 5,
+  "n_estimators": 1500,
+  "num_leaves": 27,
+  "reg_lambda": 30.0,
+  "subsample": 0.6
+ }
+}

@@ -1,0 +1,180 @@
+group,model,parameter,value
+static,Linear regression (Lasso),alpha,0.3728
+static,Random forest,n_estimators,300
+static,Random forest,max_depth,7
+static,Random forest,min_samples_split,1000
+static,Random forest,min_samples_leaf,40
+static,Random forest,max_features,0.3
+static,Random forest,max_samples,0.7
+static,XGBoost,n_estimators,150
+static,XGBoost,max_depth,1
+static,XGBoost,learning_rate,0.06627
+static,XGBoost,min_child_weight,25.01
+static,XGBoost,gamma,0.001
+static,XGBoost,subsample,0.9
+static,XGBoost,colsample_bytree,1
+static,XGBoost,reg_alpha,0.0001
+static,XGBoost,reg_lambda,0.001
+static,LightGBM,n_estimators,352
+static,LightGBM,num_leaves,96
+static,LightGBM,max_depth,1
+static,LightGBM,learning_rate,0.0254
+static,LightGBM,min_child_samples,4440
+static,LightGBM,min_child_weight,30
+static,LightGBM,subsample,0.6
+static,LightGBM,colsample_bytree,0.7965
+static,LightGBM,reg_alpha,500
+static,LightGBM,reg_lambda,5.812
+static,k-nearest neighbours,n_neighbors,30780
+static,k-nearest neighbours,weights,distance
+static,k-nearest neighbours,metric,manhattan
+static,k-nearest neighbours,scaler,StandardScaler
+static,k-nearest neighbours,power transform,none
+static,ANN (multilayer perceptron),hidden layers,"[16, 8, 4]"
+static,ANN (multilayer perceptron),L2,0
+static,ANN (multilayer perceptron),dropout,0.1
+static,ANN (multilayer perceptron),learning rate,0.001
+static,ANN (multilayer perceptron),parameters,421
+static,ANN (multilayer perceptron),final ensemble,30 seeds
+history (rungs H1 to H7),Random forest,max_depth,17
+history (rungs H1 to H7),Random forest,max_features,0.7132
+history (rungs H1 to H7),Random forest,max_samples,1
+history (rungs H1 to H7),Random forest,min_samples_leaf,75
+history (rungs H1 to H7),XGBoost,colsample_bytree,0.8698
+history (rungs H1 to H7),XGBoost,learning_rate,0.0249
+history (rungs H1 to H7),XGBoost,max_depth,8
+history (rungs H1 to H7),XGBoost,min_child_weight,65.38
+history (rungs H1 to H7),XGBoost,n_estimators,365
+history (rungs H1 to H7),XGBoost,reg_lambda,0.2761
+history (rungs H1 to H7),XGBoost,subsample,0.8528
+history (rungs H1 to H7),LightGBM,colsample_bytree,0.9062
+history (rungs H1 to H7),LightGBM,learning_rate,0.01673
+history (rungs H1 to H7),LightGBM,min_child_samples,606
+history (rungs H1 to H7),LightGBM,n_estimators,1244
+history (rungs H1 to H7),LightGBM,num_leaves,141
+history (rungs H1 to H7),LightGBM,reg_lambda,0.1724
+history (rungs H1 to H7),LightGBM,subsample,0.9023
+history (rungs H1 to H7),ANN (multilayer perceptron),hidden layers,"[64, 32, 16]"
+history (rungs H1 to H7),ANN (multilayer perceptron),final ensemble,3 seeds
+history (rungs H1 to H7),k-nearest neighbours,metric,manhattan
+history (rungs H1 to H7),k-nearest neighbours,n_neighbors,44
+history (rungs H1 to H7),k-nearest neighbours,weights,distance
+"public data, Medellín",LightGBM,colsample_bytree,0.6172
+"public data, Medellín",LightGBM,learning_rate,0.01128
+"public data, Medellín",LightGBM,min_child_samples,5
+"public data, Medellín",LightGBM,n_estimators,1245
+"public data, Medellín",LightGBM,num_leaves,42
+"public data, Medellín",LightGBM,reg_lambda,24.67
+"public data, Medellín",LightGBM,subsample,0.7633
+"public data, Medellín","LightGBM, static inputs",colsample_bytree,0.8691
+"public data, Medellín","LightGBM, static inputs",learning_rate,0.02807
+"public data, Medellín","LightGBM, static inputs",min_child_samples,55
+"public data, Medellín","LightGBM, static inputs",n_estimators,649
+"public data, Medellín","LightGBM, static inputs",num_leaves,27
+"public data, Medellín","LightGBM, static inputs",reg_lambda,0.2024
+"public data, Medellín","LightGBM, static inputs",subsample,0.9735
+"public data, Medellín","LightGBM, static inputs + SNR of the same packet",colsample_bytree,0.569
+"public data, Medellín","LightGBM, static inputs + SNR of the same packet",learning_rate,0.01
+"public data, Medellín","LightGBM, static inputs + SNR of the same packet",min_child_samples,5
+"public data, Medellín","LightGBM, static inputs + SNR of the same packet",n_estimators,1500
+"public data, Medellín","LightGBM, static inputs + SNR of the same packet",num_leaves,27
+"public data, Medellín","LightGBM, static inputs + SNR of the same packet",reg_lambda,30
+"public data, Medellín","LightGBM, static inputs + SNR of the same packet",subsample,0.6
+"public data, campus",LightGBM,colsample_bytree,0.944
+"public data, campus",LightGBM,learning_rate,0.01046
+"public data, campus",LightGBM,min_child_samples,5
+"public data, campus",LightGBM,n_estimators,719
+"public data, campus",LightGBM,num_leaves,255
+"public data, campus",LightGBM,reg_lambda,0.3134
+"public data, campus",LightGBM,subsample,0.8366
+"public data, campus","LightGBM, static inputs without the weather",colsample_bytree,0.5055
+"public data, campus","LightGBM, static inputs without the weather",learning_rate,0.02148
+"public data, campus","LightGBM, static inputs without the weather",min_child_samples,12
+"public data, campus","LightGBM, static inputs without the weather",n_estimators,545
+"public data, campus","LightGBM, static inputs without the weather",num_leaves,229
+"public data, campus","LightGBM, static inputs without the weather",reg_lambda,28.41
+"public data, campus","LightGBM, static inputs without the weather",subsample,0.9293
+"public data, campus","LightGBM, static inputs",colsample_bytree,0.7574
+"public data, campus","LightGBM, static inputs",learning_rate,0.01
+"public data, campus","LightGBM, static inputs",min_child_samples,259
+"public data, campus","LightGBM, static inputs",n_estimators,418
+"public data, campus","LightGBM, static inputs",num_leaves,255
+"public data, campus","LightGBM, static inputs",reg_lambda,15.85
+"public data, campus","LightGBM, static inputs",subsample,0.7217
+"public data, campus","LightGBM, static inputs + SNR of the same packet",colsample_bytree,0.5
+"public data, campus","LightGBM, static inputs + SNR of the same packet",learning_rate,0.01
+"public data, campus","LightGBM, static inputs + SNR of the same packet",min_child_samples,5
+"public data, campus","LightGBM, static inputs + SNR of the same packet",n_estimators,529
+"public data, campus","LightGBM, static inputs + SNR of the same packet",num_leaves,255
+"public data, campus","LightGBM, static inputs + SNR of the same packet",reg_lambda,0.1
+"public data, campus","LightGBM, static inputs + SNR of the same packet",subsample,0.6
+static input subsets (notebook 18),"LightGBM, distance only",colsample_bytree,0.6379
+static input subsets (notebook 18),"LightGBM, distance only",learning_rate,0.01
+static input subsets (notebook 18),"LightGBM, distance only",max_depth,9
+static input subsets (notebook 18),"LightGBM, distance only",min_child_samples,200
+static input subsets (notebook 18),"LightGBM, distance only",min_child_weight,3.517
+static input subsets (notebook 18),"LightGBM, distance only",n_estimators,298
+static input subsets (notebook 18),"LightGBM, distance only",num_leaves,96
+static input subsets (notebook 18),"LightGBM, distance only",reg_alpha,50
+static input subsets (notebook 18),"LightGBM, distance only",reg_lambda,0.01333
+static input subsets (notebook 18),"LightGBM, distance only",subsample,0.8464
+static input subsets (notebook 18),"LightGBM, geometry",colsample_bytree,0.8062
+static input subsets (notebook 18),"LightGBM, geometry",learning_rate,0.01485
+static input subsets (notebook 18),"LightGBM, geometry",max_depth,6
+static input subsets (notebook 18),"LightGBM, geometry",min_child_samples,4053
+static input subsets (notebook 18),"LightGBM, geometry",min_child_weight,0.2197
+static input subsets (notebook 18),"LightGBM, geometry",n_estimators,205
+static input subsets (notebook 18),"LightGBM, geometry",num_leaves,75
+static input subsets (notebook 18),"LightGBM, geometry",reg_alpha,9.399
+static input subsets (notebook 18),"LightGBM, geometry",reg_lambda,15.74
+static input subsets (notebook 18),"LightGBM, geometry",subsample,0.716
+static input subsets (notebook 18),"LightGBM, geometry + channel",colsample_bytree,0.8575
+static input subsets (notebook 18),"LightGBM, geometry + channel",learning_rate,0.01604
+static input subsets (notebook 18),"LightGBM, geometry + channel",max_depth,1
+static input subsets (notebook 18),"LightGBM, geometry + channel",min_child_samples,5000
+static input subsets (notebook 18),"LightGBM, geometry + channel",min_child_weight,2.178
+static input subsets (notebook 18),"LightGBM, geometry + channel",n_estimators,1200
+static input subsets (notebook 18),"LightGBM, geometry + channel",num_leaves,91
+static input subsets (notebook 18),"LightGBM, geometry + channel",reg_alpha,50
+static input subsets (notebook 18),"LightGBM, geometry + channel",reg_lambda,0.0001
+static input subsets (notebook 18),"LightGBM, geometry + channel",subsample,0.9
+static input subsets (notebook 18),"LightGBM, geometry + environment",colsample_bytree,0.5644
+static input subsets (notebook 18),"LightGBM, geometry + environment",learning_rate,0.01321
+static input subsets (notebook 18),"LightGBM, geometry + environment",max_depth,1
+static input subsets (notebook 18),"LightGBM, geometry + environment",min_child_samples,1841
+static input subsets (notebook 18),"LightGBM, geometry + environment",min_child_weight,0.3124
+static input subsets (notebook 18),"LightGBM, geometry + environment",n_estimators,1007
+static input subsets (notebook 18),"LightGBM, geometry + environment",num_leaves,43
+static input subsets (notebook 18),"LightGBM, geometry + environment",reg_alpha,0.01475
+static input subsets (notebook 18),"LightGBM, geometry + environment",reg_lambda,0.1596
+static input subsets (notebook 18),"LightGBM, geometry + environment",subsample,0.8498
+static input subsets (notebook 18),"LightGBM, geometry + channel + environment",colsample_bytree,0.7764
+static input subsets (notebook 18),"LightGBM, geometry + channel + environment",learning_rate,0.01146
+static input subsets (notebook 18),"LightGBM, geometry + channel + environment",max_depth,3
+static input subsets (notebook 18),"LightGBM, geometry + channel + environment",min_child_samples,2818
+static input subsets (notebook 18),"LightGBM, geometry + channel + environment",min_child_weight,0.06527
+static input subsets (notebook 18),"LightGBM, geometry + channel + environment",n_estimators,442
+static input subsets (notebook 18),"LightGBM, geometry + channel + environment",num_leaves,96
+static input subsets (notebook 18),"LightGBM, geometry + channel + environment",reg_alpha,0.0003058
+static input subsets (notebook 18),"LightGBM, geometry + channel + environment",reg_lambda,10.97
+static input subsets (notebook 18),"LightGBM, geometry + channel + environment",subsample,0.864
+static input subsets (notebook 18),"LightGBM, benchmark + SNR of the same packet",colsample_bytree,0.474
+static input subsets (notebook 18),"LightGBM, benchmark + SNR of the same packet",learning_rate,0.01
+static input subsets (notebook 18),"LightGBM, benchmark + SNR of the same packet",max_depth,5
+static input subsets (notebook 18),"LightGBM, benchmark + SNR of the same packet",min_child_samples,276
+static input subsets (notebook 18),"LightGBM, benchmark + SNR of the same packet",min_child_weight,2.642
+static input subsets (notebook 18),"LightGBM, benchmark + SNR of the same packet",n_estimators,768
+static input subsets (notebook 18),"LightGBM, benchmark + SNR of the same packet",num_leaves,89
+static input subsets (notebook 18),"LightGBM, benchmark + SNR of the same packet",reg_alpha,0.03955
+static input subsets (notebook 18),"LightGBM, benchmark + SNR of the same packet",reg_lambda,40.27
+static input subsets (notebook 18),"LightGBM, benchmark + SNR of the same packet",subsample,0.7634
+static input subsets (notebook 18),"LightGBM, environment only",colsample_bytree,0.6513
+static input subsets (notebook 18),"LightGBM, environment only",learning_rate,0.01
+static input subsets (notebook 18),"LightGBM, environment only",max_depth,3
+static input subsets (notebook 18),"LightGBM, environment only",min_child_samples,3618
+static input subsets (notebook 18),"LightGBM, environment only",min_child_weight,0.003407
+static input subsets (notebook 18),"LightGBM, environment only",n_estimators,100
+static input subsets (notebook 18),"LightGBM, environment only",num_leaves,51
+static input subsets (notebook 18),"LightGBM, environment only",reg_alpha,1.332
+static input subsets (notebook 18),"LightGBM, environment only",reg_lambda,50
+static input subsets (notebook 18),"LightGBM, environment only",subsample,0.7717

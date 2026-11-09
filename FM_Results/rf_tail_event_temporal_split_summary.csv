@@ -1,0 +1,2 @@
+train_folds,eval_fold,train_source_rows,train_model_rows,train_tail_positives,train_tail_rate_model_sample,eval_rows,eval_tail_positives,eval_tail_rate,train_max_time,eval_min_time
+"0,1,2,3",4,1418812,216297,16297,0.0753454740472591,354703,1439,0.0040569152220308255,2025-06-04 02:08:07.049606+00:00,2025-06-04 02:08:15.683623+00:00

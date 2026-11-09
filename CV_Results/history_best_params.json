@@ -1,0 +1,31 @@
+{
+ "RF": {
+  "max_depth": 17,
+  "max_features": 0.7131535881047624,
+  "max_samples": 1.0,
+  "min_samples_leaf": 75
+ },
+ "XGB": {
+  "colsample_bytree": 0.8697521170952103,
+  "learning_rate": 0.024895216086676577,
+  "max_depth": 8,
+  "min_child_weight": 65.38038421751166,
+  "n_estimators": 365,
+  "reg_lambda": 0.2761439033398466,
+  "subsample": 0.8528382512601542
+ },
+ "LGBM": {
+  "colsample_bytree": 0.9061979941786817,
+  "learning_rate": 0.0167343965754388,
+  "min_child_samples": 606,
+  "n_estimators": 1244,
+  "num_leaves": 141,
+  "reg_lambda": 0.17236683473219908,
+  "subsample": 0.9023202131343526
+ },
+ "ANN": [
+  64,
+  32,
+  16
+ ]
+}
