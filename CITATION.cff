@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: "If you use this code, cite it as below. If you use the measurements, cite the data paper listed under references."
+type: software
+title: "Indoor LoRaWAN path loss modeling"
+authors:
+  - family-names: Obiri
+    given-names: Nahshon Mokua
+    affiliation: "University of Siegen"
+repository-code: "https://github.com/nahshonmokua/LoRaWAN-IndoorPathLossModeling-ML"
+license: MIT
+date-released: "2026-11-09"
+keywords:
+  - LoRaWAN
+  - indoor propagation
+  - path loss
+  - fade margin
+  - conformal prediction
+  - machine learning
+references:
+  - type: article
+    authors:
+      - family-names: Obiri
+        given-names: Nahshon Mokua
+      - family-names: Van Laerhoven
+        given-names: Kristof
+    title: "A comprehensive data description for LoRaWAN path loss measurements in an indoor office setting: Effects of environmental factors"
+    journal: "IEEE Access"
+    volume: 13
+    start: 83148
+    end: 83170
+    year: 2025
+    doi: 10.1109/ACCESS.2025.3569164
+  - type: data
+    authors:
+      - family-names: Obiri
+        given-names: Nahshon Mokua
+      - family-names: Van Laerhoven
+        given-names: Kristof
+    title: "LoRaWAN path loss measurements in an indoor office setting including environmental factors/conditions, version 4"
+    year: 2026
+    doi: 10.5281/zenodo.23496955
+    license: CC-BY-4.0
