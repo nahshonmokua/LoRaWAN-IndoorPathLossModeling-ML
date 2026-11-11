@@ -1,0 +1,34 @@
+version,estimator,setting,value,validation_rmse,selected,median interval s
+same SF,exponential average,weight,0.005,3.741602817322139,False,60.05069399999999
+same SF,exponential average,weight,0.01,3.524824765768476,False,60.05069399999999
+same SF,exponential average,weight,0.02,3.350784090990847,False,60.05069399999999
+same SF,exponential average,weight,0.05,3.1663184286542148,False,60.05069399999999
+same SF,exponential average,weight,0.1,3.0639373730641455,False,60.05069399999999
+same SF,exponential average,weight,0.2,3.038527369166819,True,60.05069399999999
+same SF,exponential average,weight,0.5,3.2872040168204752,False,60.05069399999999
+same SF,Kalman filter,drift variance per minute,0.0001,3.290230895641211,False,60.05069399999999
+same SF,Kalman filter,drift variance per minute,0.001,3.0861093040362304,False,60.05069399999999
+same SF,Kalman filter,drift variance per minute,0.01,3.046792847222032,True,60.05069399999999
+same SF,Kalman filter,drift variance per minute,0.1,3.3003591921410114,False,60.05069399999999
+"all SFs, SF offset removed",exponential average,weight,0.005,3.2749602324046494,False,60.047932
+"all SFs, SF offset removed",exponential average,weight,0.01,3.1550976184406325,False,60.047932
+"all SFs, SF offset removed",exponential average,weight,0.02,3.0725900451027175,False,60.047932
+"all SFs, SF offset removed",exponential average,weight,0.05,3.0199557746777335,True,60.047932
+"all SFs, SF offset removed",exponential average,weight,0.1,3.0222795335750483,False,60.047932
+"all SFs, SF offset removed",exponential average,weight,0.2,3.071029438082503,False,60.047932
+"all SFs, SF offset removed",exponential average,weight,0.5,3.332323166970396,False,60.047932
+"all SFs, SF offset removed",Kalman filter,drift variance per minute,0.0001,3.142062722279369,False,60.047932
+"all SFs, SF offset removed",Kalman filter,drift variance per minute,0.001,3.034125604863865,False,60.047932
+"all SFs, SF offset removed",Kalman filter,drift variance per minute,0.01,3.023739729372647,True,60.047932
+"all SFs, SF offset removed",Kalman filter,drift variance per minute,0.1,3.137985474628871,False,60.047932
+all SFs,exponential average,weight,0.005,3.4820276822102505,False,60.047932
+all SFs,exponential average,weight,0.01,3.3686378940207096,False,60.047932
+all SFs,exponential average,weight,0.02,3.2917116970090516,False,60.047932
+all SFs,exponential average,weight,0.05,3.244887437951368,True,60.047932
+all SFs,exponential average,weight,0.1,3.247791280647518,False,60.047932
+all SFs,exponential average,weight,0.2,3.2832179216468576,False,60.047932
+all SFs,exponential average,weight,0.5,3.48024718935981,False,60.047932
+all SFs,Kalman filter,drift variance per minute,0.0001,3.3564909685059234,False,60.047932
+all SFs,Kalman filter,drift variance per minute,0.001,3.256938459294534,False,60.047932
+all SFs,Kalman filter,drift variance per minute,0.01,3.2492104628633176,True,60.047932
+all SFs,Kalman filter,drift variance per minute,0.1,3.331866695325236,False,60.047932
