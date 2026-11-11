@@ -77,7 +77,7 @@ Hold-out window 21 July to 30 September 2025, 532,055 packets; RMSE and the 99 %
 | LightGBM, rung H4 | + same-channel history, clock, spreading factor | 1.77 | 7.7 | `CV_Results/information_by_family.csv` |
 | LightGBM, rung H7 | + earlier SNR, sensors, link level, geometry | 1.77 | 7.7 | `CV_Results/information_by_family.csv` |
 
-On the held-out window, a margin that follows the operating state of the link averages 3.8 to 4.0 dB and covers at least 98.5 % of every state (`CV_Results/margin_headline.csv`); the reference rule of adaptive data rate in path loss form, the best of the last 20 packets at the same spreading factor plus 10 dB, covers 98.3 % (`CV_Results/adr_reference_rule.csv`).
+On the held-out window, a margin that follows the operating state of the link averages 3.8 to 4.0 dB and covers 98.5 to 98.8 % of the packets in its weakest state (`CV_Results/margin_headline.csv`); the reference rule of adaptive data rate in path loss form, the best of the last 20 packets at the same spreading factor plus 10 dB, covers 98.3 % (`CV_Results/adr_reference_rule.csv`).
 
 Every family on every rung is in `CV_Results/information_by_family.csv`; the paired intervals of the static models in `CV_Results/bootstrap_test_comparison.csv`; the margins by operating state and the estimators of adaptive data rate schemes in the result files of notebooks 16 and 17; the input groups with intervals in `CV_Results/static_feature_groups.csv` and `history_group_steps.csv`; the public datasets in `CV_Results/medellin_ladder.csv` and `uva_ladder.csv`.
 
