@@ -20,7 +20,7 @@ git clone https://github.com/nahshonmokua/LoRaWAN-IndoorPathLossModeling-ML && c
 python3.12 -m venv .venv && source .venv/bin/activate && python -m pip install -r requirements.txt
 python -m ipykernel install --user --name lorawan-pathloss --display-name "Python (LoRaWAN path loss)"
 bash get_data.sh    # file 3 of the Zenodo record into Data_Files/, checked by md5
-bash run_all.sh     # the 24 notebooks in dependency order, in place; about 50 h, notebooks 06 and 14 on the RAPIDS kernel
+bash run_all.sh     # the 25 notebooks in dependency order, in place; about 50 h, notebooks 06 and 14 on the RAPIDS kernel
 ```
 
 The result files of the reported runs are in `CV_Results/`, `FM_Results/` and `Shadow_Results/`, and the executed cells of every notebook show those runs, so the results can be read without running anything.
@@ -50,7 +50,7 @@ The notebooks are numbered by topic and run from the repository root, through `r
 | Residual distribution and fade margins | 08, 09 | `Shadow_Results/`, `FM_Results/` |
 | Comparisons of the static models: searches, paired bootstrap, input groups, error metrics | 10, 11, 18, 20 | `CV_Results/`, `Figures/` |
 | Link history: the inputs and rungs H1 to H7, every family, a link left out, re-tuning | 12, 13, 14 (RAPIDS), 15, 23 | `Data_Files/history_*.csv`, `CV_Results/history_*.csv`, `information_by_family.csv` |
-| Margin calibration on rolling windows; the estimators of adaptive data rate schemes | 16, 17 | `CV_Results/margin_*.csv`, `adr_estimators.csv` |
+| Margin calibration on rolling windows; the estimators of adaptive data rate schemes; both without the channel of the predicted packet, which a network server does not know when it decides | 16, 17, 24 | `CV_Results/margin_*.csv`, `adr_estimators.csv`, `server_side_*.csv` |
 | The same ladder on the two public datasets | 19, 21 | `CV_Results/medellin_*.csv`, `uva_*.csv` |
 | Tables and figures | 22 | `Tables/`, `Figures/` |
 
@@ -77,9 +77,9 @@ Hold-out window 21 July to 30 September 2025, 532,055 packets; RMSE and the 99 %
 | LightGBM, rung H4 | + same-channel history, clock, spreading factor | 1.77 | 7.7 | `CV_Results/information_by_family.csv` |
 | LightGBM, rung H7 | + earlier SNR, sensors, link level, geometry | 1.77 | 7.7 | `CV_Results/information_by_family.csv` |
 
-On the held-out window, a margin that follows the operating state of the link averages 3.8 to 4.0 dB and covers 98.5 to 98.8 % of the packets in its weakest state (`CV_Results/margin_headline.csv`); the reference rule of adaptive data rate in path loss form, the best of the last 20 packets at the same spreading factor plus 10 dB, covers 98.3 % (`CV_Results/adr_reference_rule.csv`).
+On the held-out window, a margin that follows the operating state of the link averages 3.8 to 4.0 dB and covers 98.5 to 98.8 % of the packets in its weakest state (`CV_Results/margin_headline.csv`), and 4.3 to 4.5 dB without the channel of the predicted packet, which a network server does not know when it decides (`CV_Results/server_side_margins.csv`); the reference rule of adaptive data rate in path loss form, the best of the last 20 packets at the same spreading factor plus 10 dB, covers 98.3 % (`CV_Results/adr_reference_rule.csv`).
 
-Every family on every rung is in `CV_Results/information_by_family.csv`; the paired intervals of the static models in `CV_Results/bootstrap_test_comparison.csv`; the margins by operating state and the estimators of adaptive data rate schemes in the result files of notebooks 16 and 17; the input groups with intervals in `CV_Results/static_feature_groups.csv` and `history_group_steps.csv`; the public datasets in `CV_Results/medellin_ladder.csv` and `uva_ladder.csv`.
+Every family on every rung is in `CV_Results/information_by_family.csv`; the paired intervals of the static models in `CV_Results/bootstrap_test_comparison.csv`; the margins by operating state and the estimators of adaptive data rate schemes in the result files of notebooks 16, 17 and 24; the input groups with intervals in `CV_Results/static_feature_groups.csv` and `history_group_steps.csv`; the public datasets in `CV_Results/medellin_ladder.csv` and `uva_ladder.csv`.
 
 ## Citation
 
