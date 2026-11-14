@@ -4,7 +4,7 @@
 # Notebooks 06 and 14 need the RAPIDS kernel (see README, Environments). The whole chain takes about 50 h on 32 cores and one GPU.
 set -e
 cd "$(dirname "$0")"
-for n in 00 01 02 03 04 05 06 07 08 10 11 12 13 14 09 15 16 17 18 19 20 21 22 23; do
+for n in 00 01 02 03 04 05 06 07 08 10 11 12 13 14 09 15 16 17 18 19 20 21 22 23 24; do
     nb=$(ls "${n}"_*.ipynb)
     case "$nb" in 06_*|14_*) kernel=lorawan-pathloss-rapids ;; *) kernel=lorawan-pathloss ;; esac
     echo "$(date '+%F %T')  $nb  ($kernel)"
