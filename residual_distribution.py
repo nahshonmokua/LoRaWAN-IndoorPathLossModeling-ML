@@ -13,7 +13,7 @@ from scipy.special import logsumexp
 from scipy.stats import kstest, norm
 
 BIN = 0.01                    # dB, the EM bins
-SD_FLOOR = np.sqrt(1 / 12)    # dB, the spread of the dequantisation
+SD_FLOOR = np.sqrt(1 / 12)    # dB, the spread of the dequantization
 
 
 class Mixture(NamedTuple):
@@ -46,7 +46,7 @@ def dequantise(residuals, seed=42):
 
 
 def binned(x):
-    """Centres and counts of the occupied bins."""
+    """Centers and counts of the occupied bins."""
     idx = np.floor(np.asarray(x, float) / BIN).astype(np.int64)
     lo = idx.min()
     counts = np.bincount(idx - lo).astype(float)
@@ -55,7 +55,7 @@ def binned(x):
 
 
 def em(c, n_c, w, mu, sd, tol=1e-9, max_iter=200_000):
-    """EM on bin centres c with counts n_c from the start (w, mu, sd), until the log-likelihood gains less than tol per residual."""
+    """EM on bin centers c with counts n_c from the start (w, mu, sd), until the log-likelihood gains less than tol per residual."""
     ll_old = -np.inf
     for _ in range(max_iter):
         lp = np.log(w) + norm.logpdf(c[:, None], mu, sd)
