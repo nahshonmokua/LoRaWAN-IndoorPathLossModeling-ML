@@ -85,6 +85,6 @@ Every family on every rung is in `CV_Results/information_by_family.csv`; the pai
 
 If you use the measurements, cite the data paper:
 
-> N. Mokua Obiri and K. van Laerhoven, “A Comprehensive Data Description for LoRaWAN Path Loss Measurements in an Indoor Office Setting: Effects of Environmental Factors,” *IEEE Access*, vol. 13, pp. 83148–83170, 2025. https://doi.org/10.1109/ACCESS.2025.3569164
+> N. M. Obiri and K. Van Laerhoven, “A Comprehensive Data Description for LoRaWAN Path Loss Measurements in an Indoor Office Setting: Effects of Environmental Factors,” *IEEE Access*, vol. 13, pp. 83148–83170, 2025. https://doi.org/10.1109/ACCESS.2025.3569164
 
 To cite the code, use [`CITATION.cff`](CITATION.cff), which GitHub offers as “Cite this repository”. The dataset is CC BY 4.0; the code is under the [MIT license](LICENSE).
