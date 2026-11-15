@@ -25,11 +25,11 @@ static,LightGBM,subsample,0.6
 static,LightGBM,colsample_bytree,0.7965
 static,LightGBM,reg_alpha,500
 static,LightGBM,reg_lambda,5.812
-static,k-nearest neighbours,n_neighbors,30780
-static,k-nearest neighbours,weights,distance
-static,k-nearest neighbours,metric,manhattan
-static,k-nearest neighbours,scaler,StandardScaler
-static,k-nearest neighbours,power transform,none
+static,k-nearest neighbors,n_neighbors,30780
+static,k-nearest neighbors,weights,distance
+static,k-nearest neighbors,metric,manhattan
+static,k-nearest neighbors,scaler,StandardScaler
+static,k-nearest neighbors,power transform,none
 static,ANN (multilayer perceptron),hidden layers,"[16, 8, 4]"
 static,ANN (multilayer perceptron),L2,0
 static,ANN (multilayer perceptron),dropout,0.1
@@ -56,9 +56,9 @@ history (rungs H1 to H7),LightGBM,reg_lambda,0.1724
 history (rungs H1 to H7),LightGBM,subsample,0.9023
 history (rungs H1 to H7),ANN (multilayer perceptron),hidden layers,"[64, 32, 16]"
 history (rungs H1 to H7),ANN (multilayer perceptron),final ensemble,3 seeds
-history (rungs H1 to H7),k-nearest neighbours,metric,manhattan
-history (rungs H1 to H7),k-nearest neighbours,n_neighbors,44
-history (rungs H1 to H7),k-nearest neighbours,weights,distance
+history (rungs H1 to H7),k-nearest neighbors,metric,manhattan
+history (rungs H1 to H7),k-nearest neighbors,n_neighbors,44
+history (rungs H1 to H7),k-nearest neighbors,weights,distance
 "public data, Medellín",LightGBM,colsample_bytree,0.6172
 "public data, Medellín",LightGBM,learning_rate,0.01128
 "public data, Medellín",LightGBM,min_child_samples,5
