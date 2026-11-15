@@ -5,7 +5,7 @@ How much fade margin an indoor LoRaWAN link needs, as a function of what its pre
 [![Dataset](https://img.shields.io/badge/dataset-Zenodo-1682D4?logo=zenodo&logoColor=white)](https://doi.org/10.5281/zenodo.15349730)
 [![Data paper](https://img.shields.io/badge/data%20paper-IEEE%20Access-00629B?logo=ieee&logoColor=white)](https://doi.org/10.1109/ACCESS.2025.3569164)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Licence](https://img.shields.io/badge/licence-MIT-3DA639)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-3DA639)](LICENSE)
 
 One year of measurements from six fixed links on one office floor: 2,660,274 uplinks, spreading factors 7 to 12, five environmental sensors at each device. Six machine learning families are fitted on static inputs, then on cumulative rungs of the link's own earlier packets, and compared with five classical propagation models, which have no history form; every model is evaluated on a later period. One chronological protocol throughout: the earliest 80 % of the packets train, five forward-chaining folds select, the latest 20 % are held out for the final evaluation. A fade margin is the empirical quantile of the out-of-fold residuals at the split-conformal level (`margin_tools.py`), scored on the hold-out by coverage within operating states, pinball loss and the clustering of the misses. The same procedure runs on two public datasets, the Medellín measurements of González-Palacio et al. and the campus metadata of the University of Virginia.
 
@@ -70,14 +70,14 @@ Hold-out window 21 July to 30 September 2025, 532,055 packets; RMSE and the 99 %
 | Random forest | geometry, channel, sensors | 4.74 | 18.3 | as above |
 | XGBoost | geometry, channel, sensors | 4.74 | 18.4 | as above |
 | LightGBM | geometry, channel, sensors | 4.77 | 18.3 | as above |
-| k-nearest neighbours | geometry, channel, sensors | 4.68 | 17.8 | as above |
+| k-nearest neighbors | geometry, channel, sensors | 4.68 | 17.8 | as above |
 | ANN | geometry, channel, sensors | 4.52 | 18.5 | as above |
 | Previous-hour mean | the link's earlier packets | 2.48 | 10.6 | `CV_Results/history_benchmark.csv` |
 | LightGBM, rung H1 | link history | 2.16 | 8.9 | `CV_Results/information_by_family.csv` |
 | LightGBM, rung H4 | + same-channel history, clock, spreading factor | 1.77 | 7.7 | `CV_Results/information_by_family.csv` |
 | LightGBM, rung H7 | + earlier SNR, sensors, link level, geometry | 1.77 | 7.7 | `CV_Results/information_by_family.csv` |
 
-On the held-out window, a margin that follows the operating state of the link averages 3.8 to 4.0 dB and covers 98.5 to 98.8 % of the packets in its weakest state (`CV_Results/margin_headline.csv`), and 4.3 to 4.5 dB without the channel of the predicted packet, which a network server does not know when it decides (`CV_Results/server_side_margins.csv`); the reference rule of adaptive data rate in path loss form, the best of the last 20 packets at the same spreading factor plus 10 dB, covers 98.3 %, and 99.7 % with 15 dB, 11.6 dB above the previous-hour mean (`CV_Results/adr_reference_rule.csv`).
+On the held-out window, a margin that follows the operating state of the link averages 3.8 to 4.0 dB and covers 98.5 to 98.8 % of the packets in its weakest state (`CV_Results/margin_headline.csv`), and 4.3 to 4.5 dB without the channel of the predicted packet, which a network server does not know when it decides (`CV_Results/server_side_margins.csv`). The reference rule of adaptive data rate in path loss form, the best of the last 20 packets at the same spreading factor plus 10 dB, covers 98.3 %, and 99.7 % with 15 dB, 11.6 dB above the previous-hour mean (`CV_Results/adr_reference_rule.csv`).
 
 Every family on every rung is in `CV_Results/information_by_family.csv`; the paired intervals of the static models in `CV_Results/bootstrap_test_comparison.csv`; the margins by operating state and the estimators of adaptive data rate schemes in the result files of notebooks 16, 17 and 24; the input groups with intervals in `CV_Results/static_feature_groups.csv` and `history_group_steps.csv`; the public datasets in `CV_Results/medellin_ladder.csv` and `uva_ladder.csv`.
 
@@ -87,4 +87,4 @@ If you use the measurements, cite the data paper:
 
 > N. Mokua Obiri and K. van Laerhoven, “A Comprehensive Data Description for LoRaWAN Path Loss Measurements in an Indoor Office Setting: Effects of Environmental Factors,” *IEEE Access*, vol. 13, pp. 83148–83170, 2025. https://doi.org/10.1109/ACCESS.2025.3569164
 
-To cite the code, use [`CITATION.cff`](CITATION.cff), which GitHub offers as “Cite this repository”. The dataset is CC BY 4.0; the code is under the [MIT licence](LICENSE).
+To cite the code, use [`CITATION.cff`](CITATION.cff), which GitHub offers as “Cite this repository”. The dataset is CC BY 4.0; the code is under the [MIT license](LICENSE).
