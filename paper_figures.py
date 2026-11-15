@@ -1,7 +1,7 @@
 """Figure style: every figure is drawn at its printed width (IEEE column 3.5 in, page 7.16 in) in a Times-like serif, with ticks
-inside the axes, legends inside the panels and a subcaption "(a) ..." below each panel. The six model families keep one colour and
-one marker in every figure; the colours are told apart under every colour-vision deficiency, pair by pair. Everything that is not a
-family (baselines, estimators, datasets) is drawn in ink and greys, and LightGBM on the reference rung in amber."""
+inside the axes, legends inside the panels and a subcaption "(a) ..." below each panel. The six model families keep one color and
+one marker in every figure; the colors are told apart under every color-vision deficiency, pair by pair. Everything that is not a
+family (baselines, estimators, datasets) is drawn in ink and grays, and LightGBM on the reference rung in amber."""
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
@@ -36,7 +36,7 @@ def use():
 
 
 def family_line(ax, x, y, fam, **kw):
-    """One family's series: its colour and its marker, the marker edged in ink so that the light colours hold on white and in print."""
+    """One family's series: its color and its marker, the marker edged in ink so that the light colors hold on white and in print."""
     m = MARKER[fam]
     style = dict(color=COLOUR[fam], marker=m, ms=MARKER_SIZE[m], mfc=COLOUR[fam], mec=INK, mew=0.45, lw=1.1, label=NAME[fam], zorder=3)
     style.update(kw)
@@ -50,7 +50,7 @@ def family_handles():
 
 
 def subcaptions(fig, axes, texts, pad_pt=5):
-    """Subcaptions "(a) ...", centred under each panel and aligned on one baseline for each row of panels."""
+    """Subcaptions "(a) ...", centered under each panel and aligned on one baseline for each row of panels."""
     fig.canvas.draw()
     renderer, to_fig = fig.canvas.get_renderer(), fig.transFigure.inverted()
     rows = {}
@@ -67,14 +67,14 @@ def subcaptions(fig, axes, texts, pad_pt=5):
 
 def row_regions(fig, ax, groups, right, half, gap=2.0, margin=0.75):
     """Shade groups of rows as regions behind the labels and the panels, from the left edge of the saved image to `right` (a figure
-    fraction). groups: (colour, first row, last row) in row order, the rows at integer y on ax, whose y axis runs downwards; half: the half
-    height of the bars in rows. Two neighbouring regions are parted by a white gap of `gap` pt, centred between the bars and the label of
+    fraction). groups: (color, first row, last row) in row order, the rows at integer y on ax, whose y axis runs downward; half: the half
+    height of the bars in rows. Two neighboring regions are parted by a white gap of `gap` pt, centered between the bars and the label of
     the last row of the one and those of the first row of the other. Checks that every label and bar lies at least `margin` pt inside its
     region, the labels also from the region's left edge."""
     from matplotlib.patches import Rectangle
     fig.canvas.draw()
     renderer, pt = fig.canvas.get_renderer(), fig.dpi / 72
-    y = lambda row: ax.transData.transform((0, row))[1]                       # display y, upwards
+    y = lambda row: ax.transData.transform((0, row))[1]                       # display y, upward
     label = {int(round(t)): s.get_window_extent(renderer) for t, s in zip(ax.get_yticks(), ax.get_yticklabels())}
     top = lambda row: max(y(row - half), label[row].y1)                        # the highest point of a row's bar and label
     bottom = lambda row: min(y(row + half), label[row].y0)
